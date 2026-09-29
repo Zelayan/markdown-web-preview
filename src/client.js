@@ -46,6 +46,7 @@ window.__ModuleLoader__.load({
       const layoutRef = React.useRef(null);
       const scrollElement = React.useRef(null);
       const navItemsRef = React.useRef(null);
+      const rightOutlineRef = React.useRef(null);
       const cleanupResize = React.useRef(null);
 
       // Clean up resize listener on unmount
@@ -75,7 +76,7 @@ window.__ModuleLoader__.load({
             const scrollRange = scroller.scrollHeight - scroller.clientHeight;
             const currentProgress = scrollRange > 0 ? Math.min(100, Math.max(0, (scroller.scrollTop / scrollRange) * 100)) : 0;
             setProgress(Math.round(currentProgress));
-            setShowBackToTop(scroller.scrollTop > 300);
+            setShowBackToTop(scroller.scrollTop > 260);
 
             // Active section detection
             if (headings.length > 0) {
@@ -85,7 +86,7 @@ window.__ModuleLoader__.load({
                 const el = findHeading(scroller, entry.id);
                 if (el) {
                   const rect = el.getBoundingClientRect();
-                  if (rect.top - scrollerTop <= 60) {
+                  if (rect.top - scrollerTop <= 80) {
                     currentActive = entry.id;
                   } else {
                     break;
@@ -112,7 +113,7 @@ window.__ModuleLoader__.load({
         }
       }, [active]);
 
-      // Handle copy code button clicks and anchor jumps
+      // Handle copy code button clicks
       const handleProseClick = React.useCallback(event => {
         const copyButton = event.target.closest('.mwp-code-copy');
         if (copyButton) {
@@ -208,7 +209,7 @@ window.__ModuleLoader__.load({
         const target = findHeading(container, id);
         if (!target || !container) return;
         container.scrollTo({
-          top: target.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop - 12,
+          top: target.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop - 14,
           behavior: 'smooth',
         });
         setActive(id);
@@ -222,12 +223,16 @@ window.__ModuleLoader__.load({
         entry.title.toLocaleLowerCase().includes(filter.trim().toLocaleLowerCase())
       );
 
+      // Active title for breadcrumb
+      const activeHeadingObj = headings.find(h => h.id === active) || headings[0];
+      const activeTitle = activeHeadingObj?.title || '文档正文';
+
       const themeClass = theme === 'dark' ? ' theme-dark' : theme === 'light' ? ' theme-light' : '';
       const themeLabel = theme === 'dark' ? '暗色' : theme === 'light' ? '亮色' : '自动';
       const themeIcon = theme === 'dark' ? '🌙' : theme === 'light' ? '☀️' : '🌓';
 
       const statsText = stats?.words
-        ? `${headings.length} 节 · ${stats.words.toLocaleString()} 字 · ${stats.readTimeMinutes} 分钟`
+        ? `${headings.length} 节 · ${stats.words.toLocaleString()} 字`
         : `${headings.length} 节`;
 
       return h('section', {
@@ -239,19 +244,38 @@ window.__ModuleLoader__.load({
         h('div', { className: 'mwp-progress-track' },
           h('div', { className: 'mwp-progress-fill', style: { '--mwp-progress': `${progress}%` } })
         ),
-        // Header / Toolbar
+        // Top Modern Header Bar
         h('header', { className: 'mwp-toolbar' },
-          h('div', { className: 'mwp-identity' },
-            h('span', { className: 'mwp-monogram', 'aria-hidden': true }, 'M'),
-            h('span', { className: 'mwp-name' }, 'Markdown 阅读'),
-            h('span', { className: 'mwp-separator', 'aria-hidden': true }, '/'),
-            h('span', { className: 'mwp-stats-badge', title: '章节数 · 字数 · 预估用时' }, statsText)
+          h('div', { className: 'mwp-navbar-left' },
+            h('div', { className: 'mwp-brand' },
+              h('span', { className: 'mwp-brand-icon', 'aria-hidden': true }, '📖'),
+              h('span', null, '技术文档')
+            )
           ),
-          h('div', { className: 'mwp-toolbar-actions' },
+          h('div', { className: 'mwp-navbar-center' },
+            h('label', { className: 'mwp-quick-search' },
+              h('span', { 'aria-hidden': true }, '🔍'),
+              h('input', {
+                value: filter,
+                type: 'search',
+                placeholder: '搜索文档章节...',
+                'aria-label': '搜索文档章节',
+                onChange: event => setFilter(event.target.value),
+              }),
+              filter && h('button', {
+                type: 'button',
+                className: 'mwp-search-clear',
+                'aria-label': '清除搜索',
+                onClick: () => setFilter(''),
+              }, '×')
+            )
+          ),
+          h('div', { className: 'mwp-navbar-right' },
+            h('span', { className: 'mwp-stats-badge', title: '章节数 · 字数' }, statsText),
             h('button', {
               type: 'button',
               className: `mwp-tool-btn${isWide ? ' is-active' : ''}`,
-              title: isWide ? '切换为居中排版' : '切换为全宽通栏排版',
+              title: isWide ? '切换为居中版式' : '切换为全宽通栏版式',
               onClick: toggleWide,
             }, isWide ? '通栏' : '居中'),
             h('button', {
@@ -274,50 +298,32 @@ window.__ModuleLoader__.load({
             )
           )
         ),
-        // Main Layout
+        // Main Three-Column Layout
         h('div', {
           className: `mwp-layout${resizing ? ' is-resizing' : ''}`,
           ref: layoutRef,
           style: { '--mwp-toc-width': `${tocWidth}px` },
         },
-          // Table of Contents Sidebar
-          tocOpen && h('nav', { className: 'mwp-nav', 'aria-label': '文档目录' },
-            h('div', { className: 'mwp-nav-kicker' }, 'TOC / 章节目录'),
-            h('div', { className: 'mwp-search-row' },
-              h('label', { className: 'mwp-search' },
-                h('span', { 'aria-hidden': true }, '⌕'),
-                h('input', {
-                  value: filter,
-                  type: 'search',
-                  placeholder: '筛选章节...',
-                  'aria-label': '筛选章节',
-                  onChange: event => setFilter(event.target.value),
-                })
-              ),
-              filter && h('button', {
-                type: 'button',
-                className: 'mwp-search-clear',
-                'aria-label': '清除筛选',
-                title: '清除筛选',
-                onClick: () => setFilter(''),
-              }, '×')
+          // Left Sidebar (Navigation Tree)
+          tocOpen && h('nav', { className: 'mwp-nav', 'aria-label': '章节目录' },
+            h('div', { className: 'mwp-nav-header' },
+              h('span', { className: 'mwp-nav-title' }, '目录')
             ),
             h('div', { className: 'mwp-nav-items', ref: navItemsRef },
               shownHeadings.length
                 ? shownHeadings.map(entry => h('button', {
                     key: entry.id,
                     type: 'button',
-                    className: `mwp-nav-item${active === entry.id ? ' is-current' : ''}`,
+                    className: `mwp-nav-item${active === entry.id ? ' is-current' : ''}${entry.level === 1 ? ' mwp-nav-h1' : ''}`,
                     style: { '--mwp-level': Math.min(3, entry.level - 1) },
                     title: `${entry.title} (H${entry.level})`,
                     onClick: () => goTo(entry.id),
                   },
-                    h('span', { className: 'mwp-level-dot', 'aria-hidden': true }),
-                    h('span', { style: { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, entry.title)
+                    h('span', { className: 'mwp-nav-text' }, entry.title),
+                    entry.level === 1 && h('span', { style: { opacity: 0.4, fontSize: '10px' } }, '›')
                   ))
                 : h('p', { className: 'mwp-empty' }, headings.length ? '没有匹配的章节' : '文档暂无标题')
-            ),
-            h('span', { className: 'mwp-nav-footer' }, 'HARNESS DOCS')
+            )
           ),
           // Resizer Divider
           tocOpen && h('div', {
@@ -337,12 +343,38 @@ window.__ModuleLoader__.load({
               saveTocWidth(storage(), DEFAULT_TOC_WIDTH);
             },
           }),
-          // Document Scroller
+          // Center Article Viewport & Right In-page Outline
           h('div', { className: 'mwp-scroller', ref: setScroller, onClick: handleProseClick },
-            h('article', { className: `mwp-article${isWide ? ' is-wide' : ''}` },
-              h('div', { className: 'mwp-prose', dangerouslySetInnerHTML: { __html: html } }),
-              content?.kind === 'text' && !content.eof && h('div', { className: 'mwp-page-note', role: 'status' }, '文档正在分页加载 · 滚动到底部可读取后续内容'),
-              h('footer', { className: 'mwp-document-end' }, '— 文档结束 —')
+            h('div', { className: 'mwp-scroller-inner' },
+              h('article', { className: `mwp-article${isWide ? ' is-wide' : ''}` },
+                // Breadcrumb
+                h('div', { className: 'mwp-breadcrumb' },
+                  h('span', { 'aria-hidden': true }, '🏠'),
+                  h('span', { className: 'mwp-crumb-link', onClick: scrollToTop }, '首页'),
+                  h('span', { 'aria-hidden': true }, '›'),
+                  h('span', { className: 'mwp-breadcrumb-current' }, activeTitle)
+                ),
+                // Prose Body
+                h('div', { className: 'mwp-prose', dangerouslySetInnerHTML: { __html: html } }),
+                content?.kind === 'text' && !content.eof && h('div', { className: 'mwp-page-note', role: 'status' }, '文档正在分页加载 · 滚动到底部可读取后续内容'),
+                h('footer', { className: 'mwp-document-end' }, '— 文档结束 —')
+              ),
+              // Right "On this page" TOC Column (Sticky)
+              !isWide && headings.length > 2 && h('aside', {
+                className: 'mwp-on-this-page',
+                ref: rightOutlineRef,
+                'aria-label': '本页目录',
+              },
+                h('div', { className: 'mwp-on-this-page-title' }, '本页目录'),
+                headings.map(entry => h('button', {
+                  key: `outline-${entry.id}`,
+                  type: 'button',
+                  className: `mwp-outline-item${active === entry.id ? ' is-current' : ''}`,
+                  style: { '--mwp-sublevel': Math.max(0, entry.level - 1) },
+                  title: entry.title,
+                  onClick: () => goTo(entry.id),
+                }, entry.title))
+              )
             ),
             // Floating Back-to-Top Button
             showBackToTop && h('button', {
