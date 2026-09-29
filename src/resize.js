@@ -43,3 +43,17 @@ export function saveWide(storage, wide) {
   try { storage?.setItem(WIDE_KEY, String(wide)); } catch { /* private mode */ }
 }
 
+export const DENSITY_KEY = 'markdown-web-preview:density';
+
+export function loadDensity(storage) {
+  try {
+    const val = storage?.getItem(DENSITY_KEY);
+    return ['compact', 'normal'].includes(val) ? val : 'compact';
+  } catch { return 'compact'; }
+}
+
+export function saveDensity(storage, density) {
+  try { storage?.setItem(DENSITY_KEY, density); } catch { /* private mode */ }
+}
+
+

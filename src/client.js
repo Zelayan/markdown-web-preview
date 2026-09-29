@@ -75,7 +75,7 @@ window.__ModuleLoader__.load({
             const scrollRange = scroller.scrollHeight - scroller.clientHeight;
             const currentProgress = scrollRange > 0 ? Math.min(100, Math.max(0, (scroller.scrollTop / scrollRange) * 100)) : 0;
             setProgress(Math.round(currentProgress));
-            setShowBackToTop(scroller.scrollTop > 380);
+            setShowBackToTop(scroller.scrollTop > 300);
 
             // Active section detection
             if (headings.length > 0) {
@@ -85,7 +85,7 @@ window.__ModuleLoader__.load({
                 const el = findHeading(scroller, entry.id);
                 if (el) {
                   const rect = el.getBoundingClientRect();
-                  if (rect.top - scrollerTop <= 90) {
+                  if (rect.top - scrollerTop <= 60) {
                     currentActive = entry.id;
                   } else {
                     break;
@@ -208,7 +208,7 @@ window.__ModuleLoader__.load({
         const target = findHeading(container, id);
         if (!target || !container) return;
         container.scrollTo({
-          top: target.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop - 24,
+          top: target.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop - 12,
           behavior: 'smooth',
         });
         setActive(id);
@@ -227,7 +227,7 @@ window.__ModuleLoader__.load({
       const themeIcon = theme === 'dark' ? '🌙' : theme === 'light' ? '☀️' : '🌓';
 
       const statsText = stats?.words
-        ? `${headings.length} 节 · 约 ${stats.words.toLocaleString()} 字 · ${stats.readTimeMinutes} 分钟`
+        ? `${headings.length} 节 · ${stats.words.toLocaleString()} 字 · ${stats.readTimeMinutes} 分钟`
         : `${headings.length} 节`;
 
       return h('section', {
@@ -243,16 +243,15 @@ window.__ModuleLoader__.load({
         h('header', { className: 'mwp-toolbar' },
           h('div', { className: 'mwp-identity' },
             h('span', { className: 'mwp-monogram', 'aria-hidden': true }, 'M'),
-            h('span', { className: 'mwp-name' }, '文档阅读器'),
+            h('span', { className: 'mwp-name' }, 'Markdown 阅读'),
             h('span', { className: 'mwp-separator', 'aria-hidden': true }, '/'),
-            h('span', { className: 'mwp-format' }, 'MARKDOWN'),
-            h('span', { className: 'mwp-stats-badge', title: '章节数 · 字数估算 · 预估阅读用时' }, statsText)
+            h('span', { className: 'mwp-stats-badge', title: '章节数 · 字数 · 预估用时' }, statsText)
           ),
           h('div', { className: 'mwp-toolbar-actions' },
             h('button', {
               type: 'button',
               className: `mwp-tool-btn${isWide ? ' is-active' : ''}`,
-              title: isWide ? '切换为适屏居中排版' : '切换为全宽通栏排版',
+              title: isWide ? '切换为居中排版' : '切换为全宽通栏排版',
               onClick: toggleWide,
             }, isWide ? '通栏' : '居中'),
             h('button', {
@@ -283,14 +282,14 @@ window.__ModuleLoader__.load({
         },
           // Table of Contents Sidebar
           tocOpen && h('nav', { className: 'mwp-nav', 'aria-label': '文档目录' },
-            h('div', { className: 'mwp-nav-kicker' }, 'ON THIS PAGE'),
+            h('div', { className: 'mwp-nav-kicker' }, 'TOC / 章节目录'),
             h('div', { className: 'mwp-search-row' },
               h('label', { className: 'mwp-search' },
                 h('span', { 'aria-hidden': true }, '⌕'),
                 h('input', {
                   value: filter,
                   type: 'search',
-                  placeholder: '筛选章节标题...',
+                  placeholder: '筛选章节...',
                   'aria-label': '筛选章节',
                   onChange: event => setFilter(event.target.value),
                 })
@@ -318,7 +317,7 @@ window.__ModuleLoader__.load({
                   ))
                 : h('p', { className: 'mwp-empty' }, headings.length ? '没有匹配的章节' : '文档暂无标题')
             ),
-            h('span', { className: 'mwp-nav-footer' }, 'DEEPSEEK HARNESS · PREVIEW')
+            h('span', { className: 'mwp-nav-footer' }, 'HARNESS DOCS')
           ),
           // Resizer Divider
           tocOpen && h('div', {
@@ -337,17 +336,10 @@ window.__ModuleLoader__.load({
               setTocWidth(DEFAULT_TOC_WIDTH);
               saveTocWidth(storage(), DEFAULT_TOC_WIDTH);
             },
-          },
-            h('span', { className: 'mwp-resize-grip', 'aria-hidden': true })
-          ),
+          }),
           // Document Scroller
           h('div', { className: 'mwp-scroller', ref: setScroller, onClick: handleProseClick },
             h('article', { className: `mwp-article${isWide ? ' is-wide' : ''}` },
-              h('div', { className: 'mwp-article-eyebrow' },
-                h('span', { className: 'mwp-dot' }),
-                h('span', { className: 'mwp-eyebrow-item' }, 'DOCUMENT / 网页阅读视图'),
-                stats?.words ? h('span', { className: 'mwp-eyebrow-item' }, `· ${stats.words.toLocaleString()} 字 · 约 ${stats.readTimeMinutes} 分钟`) : null
-              ),
               h('div', { className: 'mwp-prose', dangerouslySetInnerHTML: { __html: html } }),
               content?.kind === 'text' && !content.eof && h('div', { className: 'mwp-page-note', role: 'status' }, '文档正在分页加载 · 滚动到底部可读取后续内容'),
               h('footer', { className: 'mwp-document-end' }, '— 文档结束 —')
