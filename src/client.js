@@ -46,7 +46,6 @@ window.__ModuleLoader__.load({
       const layoutRef = React.useRef(null);
       const scrollElement = React.useRef(null);
       const navItemsRef = React.useRef(null);
-      const rightOutlineRef = React.useRef(null);
       const cleanupResize = React.useRef(null);
 
       // Clean up resize listener on unmount
@@ -223,10 +222,6 @@ window.__ModuleLoader__.load({
         entry.title.toLocaleLowerCase().includes(filter.trim().toLocaleLowerCase())
       );
 
-      // Active title for breadcrumb
-      const activeHeadingObj = headings.find(h => h.id === active) || headings[0];
-      const activeTitle = activeHeadingObj?.title || '文档正文';
-
       const themeClass = theme === 'dark' ? ' theme-dark' : theme === 'light' ? ' theme-light' : '';
       const themeLabel = theme === 'dark' ? '暗色' : theme === 'light' ? '亮色' : '自动';
       const themeIcon = theme === 'dark' ? '🌙' : theme === 'light' ? '☀️' : '🌓';
@@ -244,22 +239,22 @@ window.__ModuleLoader__.load({
         h('div', { className: 'mwp-progress-track' },
           h('div', { className: 'mwp-progress-fill', style: { '--mwp-progress': `${progress}%` } })
         ),
-        // Top Modern Header Bar
+        // Obsidian Top Toolbar
         h('header', { className: 'mwp-toolbar' },
-          h('div', { className: 'mwp-navbar-left' },
-            h('div', { className: 'mwp-brand' },
-              h('span', { className: 'mwp-brand-icon', 'aria-hidden': true }, '📖'),
-              h('span', null, '技术文档')
+          h('div', { className: 'mwp-toolbar-left' },
+            h('div', { className: 'mwp-obsidian-badge' },
+              h('span', { className: 'mwp-obsidian-icon', 'aria-hidden': true }, '◆'),
+              h('span', null, 'Obsidian 笔记')
             )
           ),
-          h('div', { className: 'mwp-navbar-center' },
-            h('label', { className: 'mwp-quick-search' },
-              h('span', { 'aria-hidden': true }, '🔍'),
+          h('div', { className: 'mwp-toolbar-center' },
+            h('label', { className: 'mwp-obsidian-search' },
+              h('span', { 'aria-hidden': true }, '⌕'),
               h('input', {
                 value: filter,
                 type: 'search',
-                placeholder: '搜索文档章节...',
-                'aria-label': '搜索文档章节',
+                placeholder: '搜索大纲章节...',
+                'aria-label': '搜索大纲章节',
                 onChange: event => setFilter(event.target.value),
               }),
               filter && h('button', {
@@ -270,12 +265,12 @@ window.__ModuleLoader__.load({
               }, '×')
             )
           ),
-          h('div', { className: 'mwp-navbar-right' },
-            h('span', { className: 'mwp-stats-badge', title: '章节数 · 字数' }, statsText),
+          h('div', { className: 'mwp-toolbar-right' },
+            h('span', { className: 'mwp-stats-badge', title: '大纲章节 · 字数' }, statsText),
             h('button', {
               type: 'button',
               className: `mwp-tool-btn${isWide ? ' is-active' : ''}`,
-              title: isWide ? '切换为居中版式' : '切换为全宽通栏版式',
+              title: isWide ? '切换为适中宽度' : '切换为通栏撑满',
               onClick: toggleWide,
             }, isWide ? '通栏' : '居中'),
             h('button', {
@@ -288,41 +283,41 @@ window.__ModuleLoader__.load({
               type: 'button',
               className: `mwp-toggle${tocOpen ? ' is-active' : ''}`,
               'aria-expanded': tocOpen,
-              'aria-label': tocOpen ? '收起目录' : '展开目录',
-              title: tocOpen ? '收起左侧目录' : '展开左侧目录',
+              'aria-label': tocOpen ? '收起大纲' : '展开大纲',
+              title: tocOpen ? '收起大纲' : '展开大纲',
               onClick: () => setTocOpen(!tocOpen),
             },
-              h('span', { 'aria-hidden': true }, '☷'),
-              h('span', null, '目录'),
+              h('span', { 'aria-hidden': true }, '≡'),
+              h('span', null, '大纲'),
               h('span', { className: 'mwp-count' }, String(headings.length).padStart(2, '0'))
             )
           )
         ),
-        // Main Three-Column Layout
+        // Obsidian Two-Pane Layout
         h('div', {
           className: `mwp-layout${resizing ? ' is-resizing' : ''}`,
           ref: layoutRef,
           style: { '--mwp-toc-width': `${tocWidth}px` },
         },
-          // Left Sidebar (Navigation Tree)
-          tocOpen && h('nav', { className: 'mwp-nav', 'aria-label': '章节目录' },
+          // Left Sidebar (Obsidian Outline View)
+          tocOpen && h('nav', { className: 'mwp-nav', 'aria-label': '笔记大纲' },
             h('div', { className: 'mwp-nav-header' },
-              h('span', { className: 'mwp-nav-title' }, '目录')
+              h('span', { className: 'mwp-nav-title' }, '大纲 OUTLINE')
             ),
             h('div', { className: 'mwp-nav-items', ref: navItemsRef },
               shownHeadings.length
                 ? shownHeadings.map(entry => h('button', {
                     key: entry.id,
                     type: 'button',
-                    className: `mwp-nav-item${active === entry.id ? ' is-current' : ''}${entry.level === 1 ? ' mwp-nav-h1' : ''}`,
+                    className: `mwp-nav-item${active === entry.id ? ' is-current' : ''}`,
                     style: { '--mwp-level': Math.min(3, entry.level - 1) },
                     title: `${entry.title} (H${entry.level})`,
                     onClick: () => goTo(entry.id),
                   },
-                    h('span', { className: 'mwp-nav-text' }, entry.title),
-                    entry.level === 1 && h('span', { style: { opacity: 0.4, fontSize: '10px' } }, '›')
+                    h('span', { className: 'mwp-nav-item-indicator', 'aria-hidden': true }, `H${entry.level}`),
+                    h('span', { style: { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, entry.title)
                   ))
-                : h('p', { className: 'mwp-empty' }, headings.length ? '没有匹配的章节' : '文档暂无标题')
+                : h('p', { className: 'mwp-empty' }, headings.length ? '没有匹配的章节' : '文档暂无大纲')
             )
           ),
           // Resizer Divider
@@ -330,12 +325,12 @@ window.__ModuleLoader__.load({
             className: 'mwp-resize',
             role: 'separator',
             tabIndex: 0,
-            'aria-label': '调整目录宽度',
+            'aria-label': '调整大纲宽度',
             'aria-orientation': 'vertical',
             'aria-valuemin': 140,
             'aria-valuemax': 420,
             'aria-valuenow': tocWidth,
-            title: '拖动调整目录宽度 · 双击恢复默认',
+            title: '拖动调整大纲宽度 · 双击恢复默认',
             onPointerDown: beginResize,
             onKeyDown: resizeWithKeys,
             onDoubleClick: () => {
@@ -343,38 +338,12 @@ window.__ModuleLoader__.load({
               saveTocWidth(storage(), DEFAULT_TOC_WIDTH);
             },
           }),
-          // Center Article Viewport & Right In-page Outline
+          // Obsidian Note Viewport
           h('div', { className: 'mwp-scroller', ref: setScroller, onClick: handleProseClick },
-            h('div', { className: 'mwp-scroller-inner' },
-              h('article', { className: `mwp-article${isWide ? ' is-wide' : ''}` },
-                // Breadcrumb
-                h('div', { className: 'mwp-breadcrumb' },
-                  h('span', { 'aria-hidden': true }, '🏠'),
-                  h('span', { className: 'mwp-crumb-link', onClick: scrollToTop }, '首页'),
-                  h('span', { 'aria-hidden': true }, '›'),
-                  h('span', { className: 'mwp-breadcrumb-current' }, activeTitle)
-                ),
-                // Prose Body
-                h('div', { className: 'mwp-prose', dangerouslySetInnerHTML: { __html: html } }),
-                content?.kind === 'text' && !content.eof && h('div', { className: 'mwp-page-note', role: 'status' }, '文档正在分页加载 · 滚动到底部可读取后续内容'),
-                h('footer', { className: 'mwp-document-end' }, '— 文档结束 —')
-              ),
-              // Right "On this page" TOC Column (Sticky)
-              !isWide && headings.length > 2 && h('aside', {
-                className: 'mwp-on-this-page',
-                ref: rightOutlineRef,
-                'aria-label': '本页目录',
-              },
-                h('div', { className: 'mwp-on-this-page-title' }, '本页目录'),
-                headings.map(entry => h('button', {
-                  key: `outline-${entry.id}`,
-                  type: 'button',
-                  className: `mwp-outline-item${active === entry.id ? ' is-current' : ''}`,
-                  style: { '--mwp-sublevel': Math.max(0, entry.level - 1) },
-                  title: entry.title,
-                  onClick: () => goTo(entry.id),
-                }, entry.title))
-              )
+            h('article', { className: `mwp-article${isWide ? ' is-wide' : ''}` },
+              h('div', { className: 'mwp-prose', dangerouslySetInnerHTML: { __html: html } }),
+              content?.kind === 'text' && !content.eof && h('div', { className: 'mwp-page-note', role: 'status' }, '文档正在分页加载 · 滚动到底部可读取后续内容'),
+              h('footer', { className: 'mwp-document-end' }, '— 笔记结束 —')
             ),
             // Floating Back-to-Top Button
             showBackToTop && h('button', {
