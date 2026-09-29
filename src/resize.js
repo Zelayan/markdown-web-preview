@@ -18,3 +18,28 @@ export function loadTocWidth(storage) {
 export function saveTocWidth(storage, width) {
   try { storage?.setItem(TOC_WIDTH_KEY, String(width)); } catch { /* private mode / disabled storage */ }
 }
+
+export const THEME_KEY = 'markdown-web-preview:theme';
+export const WIDE_KEY = 'markdown-web-preview:wide';
+
+export function loadTheme(storage) {
+  try {
+    const val = storage?.getItem(THEME_KEY);
+    return ['light', 'dark', 'auto'].includes(val) ? val : 'auto';
+  } catch { return 'auto'; }
+}
+
+export function saveTheme(storage, theme) {
+  try { storage?.setItem(THEME_KEY, theme); } catch { /* private mode */ }
+}
+
+export function loadWide(storage) {
+  try {
+    return storage?.getItem(WIDE_KEY) === 'true';
+  } catch { return false; }
+}
+
+export function saveWide(storage, wide) {
+  try { storage?.setItem(WIDE_KEY, String(wide)); } catch { /* private mode */ }
+}
+

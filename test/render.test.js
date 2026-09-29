@@ -6,7 +6,7 @@ const dom = new JSDOM('', { url: 'http://127.0.0.1:19387/' });
 globalThis.window = dom.window;
 globalThis.document = dom.window.document;
 globalThis.CSS = dom.window.CSS || { escape: s => s.replace(/[^\w-]/g, '\\$&') };
-const { renderMarkdown } = await import('../src/render.js');
+const { renderMarkdown, computeStats } = await import('../src/render.js');
 
 function parse(text) {
   const result = renderMarkdown(text, document);
@@ -36,4 +36,43 @@ test('external links are isolated and relative images are not loaded', () => {
   assert.equal(link.getAttribute('target'), '_blank');
   assert.equal(element.querySelector('img'), null);
   assert.match(element.textContent, /private/);
+});
+
+test('formats code blocks with language banner and copy button', () => {
+  const { element } = parse('```bash\necho "Hello World"\n```');
+  const block = element.querySelector('.mwp-code-block');
+  assert.ok(block);
+  assert.equal(block.querySelector('.mwp-code-lang').textContent, 'bash');
+  assert.equal(block.querySelector('.mwp-code-copy').textContent, '复制');
+  assert.equal(block.querySelector('code').textContent.trim(), 'echo "Hello World"');
+});
+
+test('wraps markdown tables in responsive container and supports zebra striping', () => {
+  const { element } = parse('| 序号 | 名称 |\n|---|---|\n| 1 | 测试 |');
+  const wrap = element.querySelector('.mwp-table-wrap');
+  assert.ok(wrap);
+  assert.ok(wrap.querySelector('table'));
+  assert.equal(wrap.querySelectorAll('th').length, 2);
+  assert.equal(wrap.querySelectorAll('td').length, 2);
+});
+
+test('renders GitHub alerts and task list items cleanly', () => {
+  const { element } = parse('> [!WARNING]\n> 请务必备份数据\n\n- [ ] 未完成\n- [x] 已完成');
+  const callout = element.querySelector('.mwp-callout-warning');
+  assert.ok(callout);
+  assert.match(callout.textContent, /警告/);
+  assert.match(callout.textContent, /请务必备份数据/);
+
+  const tasks = element.querySelectorAll('.mwp-task-item');
+  assert.equal(tasks.length, 2);
+  assert.ok(tasks[0].classList.contains('is-unchecked'));
+  assert.ok(tasks[1].classList.contains('is-checked'));
+});
+
+test('computes character, word count and estimated reading time', () => {
+  const stats = computeStats('# 标题\n这是一段测试文档，包含若干汉字和 English words。\n```\ncode\n```');
+  assert.ok(stats.characters > 20);
+  assert.ok(stats.words > 10);
+  assert.equal(typeof stats.readTimeMinutes, 'number');
+  assert.ok(stats.readTimeMinutes >= 1);
 });

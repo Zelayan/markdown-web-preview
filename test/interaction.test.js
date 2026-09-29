@@ -14,7 +14,7 @@ const { act } = React;
 let plugin;
 window.__ModuleLoader__ = { load(value) { plugin = value; } };
 vm.runInNewContext(readFileSync(new URL('../lib/client.js', import.meta.url), 'utf8'), {
-  window, document, navigator,
+  window, document,
 });
 const components = {};
 plugin.factory(name => { assert.equal(name, 'react'); return React; }).apply({
@@ -51,5 +51,30 @@ test('dragging and keyboard input resize table of contents in rendered component
   assert.equal(layout.style.getPropertyValue('--mwp-toc-width'), '329px');
   await act(async () => divider.dispatchEvent(new window.MouseEvent('dblclick', { bubbles: true })));
   assert.equal(layout.style.getPropertyValue('--mwp-toc-width'), '211px');
+  await act(async () => root.unmount());
+});
+
+test('toolbar toggles theme and wide reading width', async () => {
+  const host = document.querySelector('#root');
+  const root = createRoot(host);
+  await act(async () => root.render(React.createElement(components.Body, {
+    content: { kind: 'text', text: '# 标题\n```js\nconsole.log(42);\n```', eof: true },
+    scrollportRef() {},
+  })));
+
+  const themeBtn = Array.from(host.querySelectorAll('.mwp-tool-btn')).find(b =>
+    b.textContent.includes('自动') || b.textContent.includes('亮色') || b.textContent.includes('暗色')
+  );
+  assert.ok(themeBtn);
+  await act(async () => themeBtn.dispatchEvent(new window.MouseEvent('click', { bubbles: true })));
+  assert.match(host.querySelector('.mwp-root').className, /theme-(light|dark)/);
+
+  const wideBtn = Array.from(host.querySelectorAll('.mwp-tool-btn')).find(b =>
+    b.textContent.includes('居中') || b.textContent.includes('通栏')
+  );
+  assert.ok(wideBtn);
+  await act(async () => wideBtn.dispatchEvent(new window.MouseEvent('click', { bubbles: true })));
+  assert.ok(host.querySelector('.mwp-article.is-wide'));
+
   await act(async () => root.unmount());
 });
