@@ -1,13 +1,12 @@
 export const styles = `
 /* ==========================================================================
-   Markdown Web Preview - Classic Wiki / Confluence Reading Theme
-   Focus: Wiki typography, structured headings, bordered tables, panel callouts
+   Markdown Web Preview - True Confluence / Wiki Engineering Layout
+   100% Full-Bleed Content Canvas · Compact High-Density Prose
    ========================================================================== */
 
 .mwp-root {
-  /* Light Theme (Confluence / MediaWiki Classical Style) */
-  --mwp-bg: #f4f5f7;
-  --mwp-page-bg: #ffffff;
+  /* Light Theme (Confluence Classic) */
+  --mwp-bg: #ffffff;
   --mwp-surface: #ffffff;
   --mwp-sidebar-bg: #f4f5f7;
   --mwp-sidebar-border: #dfe1e6;
@@ -25,7 +24,7 @@ export const styles = `
   --mwp-pre-ink: #172b4d;
   --mwp-table-alt: #fafbfc;
   --mwp-table-th: #f4f5f7;
-  --mwp-shadow-page: 0 1px 1px rgba(9, 30, 66, 0.25), 0 0 1px rgba(9, 30, 66, 0.31);
+  --mwp-shadow-sm: 0 1px 2px 0 rgba(9, 30, 66, 0.08);
 
   display: flex;
   flex-direction: column;
@@ -37,15 +36,14 @@ export const styles = `
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   position: relative;
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
 /* Dark Theme */
 .mwp-root.theme-dark {
-  --mwp-bg: #101214;
-  --mwp-page-bg: #1c2127;
+  --mwp-bg: #1c2127;
   --mwp-surface: #1c2127;
-  --mwp-sidebar-bg: #161a1f;
+  --mwp-sidebar-bg: #14171b;
   --mwp-sidebar-border: #2c333a;
   --mwp-ink: #dcdfe4;
   --mwp-ink-secondary: #9fadbc;
@@ -61,15 +59,14 @@ export const styles = `
   --mwp-pre-ink: #dcdfe4;
   --mwp-table-alt: #181c22;
   --mwp-table-th: #22272b;
-  --mwp-shadow-page: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --mwp-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
 }
 
 @media (prefers-color-scheme: dark) {
   .mwp-root:not(.theme-light) {
-    --mwp-bg: #101214;
-    --mwp-page-bg: #1c2127;
+    --mwp-bg: #1c2127;
     --mwp-surface: #1c2127;
-    --mwp-sidebar-bg: #161a1f;
+    --mwp-sidebar-bg: #14171b;
     --mwp-sidebar-border: #2c333a;
     --mwp-ink: #dcdfe4;
     --mwp-ink-secondary: #9fadbc;
@@ -85,7 +82,7 @@ export const styles = `
     --mwp-pre-ink: #dcdfe4;
     --mwp-table-alt: #181c22;
     --mwp-table-th: #22272b;
-    --mwp-shadow-page: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --mwp-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
   }
 }
 
@@ -98,7 +95,7 @@ export const styles = `
    -------------------------------------------------------------------------- */
 .mwp-progress-track {
   position: absolute;
-  top: 36px;
+  top: 34px;
   left: 0;
   right: 0;
   height: 2px;
@@ -114,15 +111,15 @@ export const styles = `
 }
 
 /* --------------------------------------------------------------------------
-   Header / Toolbar (Wiki Top Bar: 36px)
+   Header / Toolbar (34px)
    -------------------------------------------------------------------------- */
 .mwp-toolbar {
-  height: 36px;
+  height: 34px;
   flex: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 12px;
+  padding: 0 10px;
   background: var(--mwp-surface);
   border-bottom: 1px solid var(--mwp-line);
   position: relative;
@@ -132,7 +129,7 @@ export const styles = `
 .mwp-identity {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   white-space: nowrap;
   min-width: 0;
 }
@@ -140,42 +137,42 @@ export const styles = `
 .mwp-monogram {
   display: grid;
   place-items: center;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 3px;
   background: var(--mwp-accent);
   color: #ffffff;
-  font: 700 11px/1 'SFMono-Regular', Menlo, monospace;
+  font: 700 10px/1 'SFMono-Regular', Menlo, monospace;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   flex-shrink: 0;
 }
 
 .mwp-name {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--mwp-ink);
 }
 
 .mwp-separator {
   color: var(--mwp-line);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .mwp-stats-badge {
   display: inline-flex;
   align-items: center;
-  padding: 1px 6px;
+  padding: 1px 5px;
   border-radius: 3px;
   background: var(--mwp-line-subtle);
   color: var(--mwp-ink-secondary);
-  font-size: 11px;
+  font-size: 10.5px;
   margin-left: 2px;
 }
 
 .mwp-toolbar-actions {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   flex-shrink: 0;
 }
 
@@ -183,13 +180,13 @@ export const styles = `
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  height: 25px;
-  padding: 0 7px;
+  height: 24px;
+  padding: 0 6px;
   border: 1px solid transparent;
   border-radius: 3px;
   background: transparent;
   color: var(--mwp-ink-secondary);
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -211,13 +208,13 @@ export const styles = `
   display: flex;
   align-items: center;
   gap: 4px;
-  height: 25px;
-  padding: 0 7px;
+  height: 24px;
+  padding: 0 6px;
   border: 1px solid var(--mwp-line);
   border-radius: 3px;
   background: var(--mwp-surface);
   color: var(--mwp-ink-secondary);
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -238,7 +235,7 @@ export const styles = `
 
 .mwp-count {
   display: inline-block;
-  padding: 0.5px 4px;
+  padding: 0.5px 3.5px;
   border-radius: 6px;
   background: var(--mwp-line-subtle);
   color: var(--mwp-mute);
@@ -256,21 +253,21 @@ export const styles = `
 }
 
 .mwp-nav {
-  width: var(--mwp-toc-width, 220px);
-  min-width: var(--mwp-toc-width, 220px);
-  flex: 0 0 var(--mwp-toc-width, 220px);
+  width: var(--mwp-toc-width, 210px);
+  min-width: var(--mwp-toc-width, 210px);
+  flex: 0 0 var(--mwp-toc-width, 210px);
   display: flex;
   flex-direction: column;
   background: var(--mwp-sidebar-bg);
   border-right: 1px solid var(--mwp-sidebar-border);
-  padding: 10px 8px 8px 10px;
+  padding: 8px 6px 6px 8px;
   user-select: none;
 }
 
 .mwp-nav-kicker {
   padding-left: 4px;
   color: var(--mwp-mute);
-  font: 700 10px/1 'SFMono-Regular', Menlo, monospace;
+  font: 700 9px/1 'SFMono-Regular', Menlo, monospace;
   letter-spacing: 0.08em;
 }
 
@@ -278,7 +275,7 @@ export const styles = `
   position: relative;
   display: flex;
   align-items: center;
-  margin: 6px 0 6px;
+  margin: 5px 0 5px;
 }
 
 .mwp-search {
@@ -286,7 +283,7 @@ export const styles = `
   align-items: center;
   gap: 4px;
   width: 100%;
-  padding: 4px 6px;
+  padding: 3px 6px;
   border: 1px solid var(--mwp-line);
   background: var(--mwp-surface);
   border-radius: 3px;
@@ -298,7 +295,7 @@ export const styles = `
 }
 
 .mwp-search span {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1;
   flex-shrink: 0;
 }
@@ -310,7 +307,7 @@ export const styles = `
   outline: 0;
   background: transparent;
   color: var(--mwp-ink);
-  font-size: 11.5px;
+  font-size: 11px;
   font-family: inherit;
 }
 
@@ -320,16 +317,16 @@ export const styles = `
 
 .mwp-search-clear {
   position: absolute;
-  right: 5px;
+  right: 4px;
   display: grid;
   place-items: center;
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
   border: 0;
   border-radius: 50%;
   background: var(--mwp-line);
   color: var(--mwp-ink-secondary);
-  font-size: 10px;
+  font-size: 9.5px;
   cursor: pointer;
 }
 
@@ -350,7 +347,7 @@ export const styles = `
 }
 
 .mwp-nav-items::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 .mwp-nav-items::-webkit-scrollbar-thumb {
   background: var(--mwp-line);
@@ -360,16 +357,16 @@ export const styles = `
 .mwp-nav-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   width: 100%;
   border: 0;
   border-radius: 3px;
-  padding: 4px 6px 4px calc(6px + var(--mwp-level, 0) * 10px);
+  padding: 3px 5px 3px calc(5px + var(--mwp-level, 0) * 9px);
   background: transparent;
   color: var(--mwp-ink-secondary);
   text-align: left;
-  font-size: 11.5px;
-  line-height: 1.35;
+  font-size: 11px;
+  line-height: 1.3;
   cursor: pointer;
   transition: all 0.08s ease;
   overflow: hidden;
@@ -389,8 +386,8 @@ export const styles = `
 }
 
 .mwp-level-dot {
-  width: 4px;
-  height: 4px;
+  width: 3px;
+  height: 3px;
   border-radius: 50%;
   background: var(--mwp-mute);
   flex-shrink: 0;
@@ -403,14 +400,14 @@ export const styles = `
 }
 
 .mwp-empty {
-  font-size: 11px;
+  font-size: 10.5px;
   color: var(--mwp-mute);
-  padding: 8px 4px;
+  padding: 6px 3px;
   text-align: center;
 }
 
 .mwp-nav-footer {
-  padding: 6px 4px 0;
+  padding: 5px 3px 0;
   border-top: 1px solid var(--mwp-line-subtle);
   color: var(--mwp-mute);
   font: 700 8.5px/1 'SFMono-Regular', Menlo, monospace;
@@ -445,7 +442,7 @@ export const styles = `
 }
 
 /* --------------------------------------------------------------------------
-   Wiki Content Viewport & White Canvas Paper
+   True Wiki Viewport: Full Bleed, No Dead White Margins
    -------------------------------------------------------------------------- */
 .mwp-scroller {
   min-width: 0;
@@ -456,70 +453,66 @@ export const styles = `
   scroll-behavior: smooth;
   position: relative;
   background: var(--mwp-bg);
-  padding: 16px 20px 48px;
+  padding: 0;
 }
 
 .mwp-article {
-  /* Wiki Paper Container */
-  max-width: 980px;
-  margin: 0;
-  background: var(--mwp-page-bg);
-  border: 1px solid var(--mwp-sidebar-border);
-  border-radius: 3px;
-  box-shadow: var(--mwp-shadow-page);
-  padding: 24px 32px 40px;
-  transition: max-width 0.1s ease;
-}
-
-.mwp-article.is-wide {
+  /* Full fluid width across entire right side */
+  width: 100%;
   max-width: 100%;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 14px 20px 48px;
 }
 
 /* --------------------------------------------------------------------------
-   Wiki Typography & Section Styles (Confluence Look & Feel)
+   High-Density Wiki Prose & Lists
    -------------------------------------------------------------------------- */
 .mwp-prose {
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 13.5px;
+  line-height: 1.5;
   color: var(--mwp-ink);
   overflow-wrap: anywhere;
 }
 
-/* Headings with Wiki hierarchy */
+/* Headings with crisp Wiki rules */
 .mwp-prose h1 {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
   letter-spacing: -0.01em;
-  margin: 0 0 16px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--mwp-line);
+  margin: 0 0 8px 0;
+  padding-bottom: 4px;
+  border-bottom: 1.5px solid var(--mwp-line);
   color: var(--mwp-ink);
   line-height: 1.25;
 }
 
 .mwp-prose h2 {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 650;
   letter-spacing: -0.01em;
-  margin: 24px 0 10px 0;
-  padding-bottom: 5px;
+  margin: 14px 0 6px 0;
+  padding-bottom: 3px;
   border-bottom: 1px solid var(--mwp-line);
   color: var(--mwp-ink);
   line-height: 1.3;
 }
 
 .mwp-prose h3 {
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: 600;
-  margin: 18px 0 6px 0;
+  margin: 10px 0 4px 0;
   color: var(--mwp-ink);
   line-height: 1.35;
 }
 
 .mwp-prose h4 {
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 600;
-  margin: 14px 0 4px 0;
+  margin: 8px 0 3px 0;
   color: var(--mwp-ink-secondary);
 }
 
@@ -527,7 +520,7 @@ export const styles = `
 .mwp-prose h2,
 .mwp-prose h3,
 .mwp-prose h4 {
-  scroll-margin-top: 16px;
+  scroll-margin-top: 14px;
   position: relative;
 }
 
@@ -543,14 +536,13 @@ export const styles = `
 }
 
 .mwp-prose p {
-  margin: 8px 0;
+  margin: 4px 0;
 }
 
 /* Wiki Links */
 .mwp-prose a {
   color: var(--mwp-accent);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
   transition: all 0.1s ease;
 }
 
@@ -561,28 +553,28 @@ export const styles = `
 
 .mwp-prose strong {
   color: var(--mwp-ink);
-  font-weight: 600;
+  font-weight: 650;
 }
 
-/* Wiki Lists */
+/* High-Density Wiki Lists (No wasted vertical gap) */
 .mwp-prose ul,
 .mwp-prose ol {
-  padding-left: 24px;
-  margin: 6px 0 10px;
+  padding-left: 20px;
+  margin: 3px 0 5px 0;
 }
 
 .mwp-prose li {
-  margin: 3px 0;
+  margin: 2px 0;
   padding-left: 2px;
 }
 
 .mwp-prose li > p {
-  margin: 2px 0 !important;
+  margin: 1px 0 !important;
 }
 
 .mwp-prose li > ul,
 .mwp-prose li > ol {
-  margin: 3px 0 4px !important;
+  margin: 1px 0 2px !important;
 }
 
 .mwp-prose li::marker {
@@ -592,21 +584,21 @@ export const styles = `
 /* Task Lists */
 .mwp-task-item {
   list-style-type: none;
-  margin-left: -18px !important;
+  margin-left: -16px !important;
   display: flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 5px;
 }
 
 .mwp-task-check {
   display: inline-grid;
   place-items: center;
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   border: 1px solid var(--mwp-line);
   border-radius: 2px;
   background: var(--mwp-surface);
-  font-size: 10px;
+  font-size: 9px;
   line-height: 1;
   color: var(--mwp-accent);
   flex-shrink: 0;
@@ -619,20 +611,20 @@ export const styles = `
   font-weight: bold;
 }
 
-/* Wiki Inline Code */
+/* Wiki Inline Code (Confluence monospace tag) */
 .mwp-prose code {
   font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
-  font-size: 12.5px;
+  font-size: 12px;
   background: var(--mwp-code-bg);
   border-radius: 3px;
-  padding: 1.5px 4.5px;
+  padding: 1px 4px;
   color: var(--mwp-ink);
   border: 1px solid var(--mwp-line);
 }
 
-/* Wiki Code Macro Block (Confluence styled) */
+/* Wiki Code Macro Container */
 .mwp-code-block {
-  margin: 12px 0;
+  margin: 8px 0;
   border-radius: 3px;
   background: var(--mwp-pre-bg);
   border: 1px solid var(--mwp-line);
@@ -643,14 +635,14 @@ export const styles = `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 12px;
+  padding: 3px 10px;
   background: var(--mwp-pre-header-bg);
   border-bottom: 1px solid var(--mwp-line);
 }
 
 .mwp-code-lang {
   color: var(--mwp-ink-secondary);
-  font: 600 10.5px/1 'SFMono-Regular', Menlo, monospace;
+  font: 600 9.5px/1 'SFMono-Regular', Menlo, monospace;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -658,13 +650,13 @@ export const styles = `
 .mwp-code-copy {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 2px 7px;
+  gap: 2px;
+  padding: 1.5px 6px;
   border: 1px solid var(--mwp-line);
   border-radius: 3px;
   background: var(--mwp-surface);
   color: var(--mwp-ink-secondary);
-  font-size: 11px;
+  font-size: 10.5px;
   cursor: pointer;
   transition: all 0.1s ease;
 }
@@ -683,7 +675,7 @@ export const styles = `
 
 .mwp-code-block pre {
   margin: 0;
-  padding: 10px 14px;
+  padding: 8px 12px;
   overflow-x: auto;
   line-height: 1.45;
   background: transparent;
@@ -703,32 +695,32 @@ export const styles = `
   border: 1px solid var(--mwp-line);
   border-radius: 3px;
   background: var(--mwp-code-bg);
-  padding: 8px 12px;
+  padding: 6px 10px;
   overflow-x: auto;
-  font-size: 12px;
+  font-size: 11.5px;
   white-space: pre-wrap;
-  margin: 8px 0;
+  margin: 6px 0;
 }
 
 /* Wiki Tables (Classic Confluence bordered grid) */
 .mwp-table-wrap {
   width: 100%;
   overflow-x: auto;
-  margin: 14px 0;
+  margin: 8px 0;
   border-radius: 2px;
 }
 
 .mwp-prose table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 12.5px;
+  line-height: 1.45;
   border: 1px solid var(--mwp-line);
 }
 
 .mwp-prose th,
 .mwp-prose td {
-  padding: 7px 12px;
+  padding: 5px 9px;
   border: 1px solid var(--mwp-line);
   text-align: left;
   vertical-align: top;
@@ -737,7 +729,7 @@ export const styles = `
 .mwp-prose th {
   background: var(--mwp-table-th);
   color: var(--mwp-ink);
-  font-weight: 600;
+  font-weight: 650;
   white-space: nowrap;
 }
 
@@ -747,22 +739,22 @@ export const styles = `
 
 /* Confluence Info / Warning / Note Panels */
 .mwp-prose blockquote {
-  margin: 12px 0;
-  padding: 10px 14px;
-  border-left: 4px solid var(--mwp-accent);
+  margin: 8px 0;
+  padding: 6px 12px;
+  border-left: 3.5px solid var(--mwp-accent);
   background: var(--mwp-accent-light);
-  border-radius: 3px;
+  border-radius: 2px;
   color: var(--mwp-ink);
 }
 
 .mwp-callout {
-  border-left-width: 4px;
+  border-left-width: 3.5px;
 }
 
 .mwp-callout-title {
-  font: 700 11px/1 'SFMono-Regular', Menlo, monospace;
+  font: 700 10px/1 'SFMono-Regular', Menlo, monospace;
   letter-spacing: 0.04em;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   text-transform: uppercase;
 }
 
@@ -799,18 +791,18 @@ export const styles = `
 .mwp-prose hr {
   border: 0;
   border-top: 1px solid var(--mwp-line);
-  margin: 20px 0;
+  margin: 14px 0;
 }
 
 .mwp-prose img {
   max-width: 100%;
-  border-radius: 3px;
+  border-radius: 2px;
   border: 1px solid var(--mwp-line);
 }
 
 .mwp-page-note {
   text-align: center;
-  padding: 12px 0;
+  padding: 10px 0;
   color: var(--mwp-mute);
   font-size: 11px;
 }
@@ -818,29 +810,29 @@ export const styles = `
 .mwp-document-end {
   text-align: center;
   border-top: 1px solid var(--mwp-line);
-  margin-top: 32px;
-  padding-top: 16px;
+  margin-top: 24px;
+  padding-top: 12px;
   color: var(--mwp-mute);
-  font: 600 10px 'SFMono-Regular', Menlo, monospace;
+  font: 600 9.5px 'SFMono-Regular', Menlo, monospace;
   letter-spacing: 0.08em;
 }
 
 /* Floating Back-To-Top Button */
 .mwp-back-to-top {
   position: absolute;
-  right: 24px;
-  bottom: 24px;
+  right: 18px;
+  bottom: 18px;
   display: flex;
   align-items: center;
-  gap: 3px;
-  padding: 4px 10px;
-  border-radius: 14px;
+  gap: 2px;
+  padding: 3px 8px;
+  border-radius: 12px;
   border: 1px solid var(--mwp-line);
   background: var(--mwp-surface);
   color: var(--mwp-ink-secondary);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 500;
-  box-shadow: 0 2px 4px rgba(9, 30, 66, 0.15);
+  box-shadow: 0 1px 3px rgba(9, 30, 66, 0.15);
   cursor: pointer;
   transition: all 0.1s ease;
   z-index: 10;
@@ -858,14 +850,11 @@ export const styles = `
    Responsive & Mobile Adaptations
    -------------------------------------------------------------------------- */
 @media (max-width: 700px) {
-  .mwp-scroller {
-    padding: 10px 10px 30px;
-  }
   .mwp-article {
-    padding: 16px 16px 30px;
+    padding: 10px 12px 30px;
   }
-  .mwp-prose h1 { font-size: 20px; }
-  .mwp-prose h2 { font-size: 16px; }
+  .mwp-prose h1 { font-size: 16.5px; }
+  .mwp-prose h2 { font-size: 14px; }
   .mwp-stats-badge { display: none; }
 }
 
@@ -873,7 +862,7 @@ export const styles = `
   .mwp-root.mwp-toc-open .mwp-nav {
     position: absolute;
     z-index: 20;
-    top: 36px;
+    top: 34px;
     bottom: 0;
     box-shadow: 4px 0 14px rgba(0, 0, 0, 0.2);
   }
@@ -884,7 +873,7 @@ export const styles = `
     position: absolute;
     top: 0;
     bottom: 0;
-    left: var(--mwp-toc-width, 220px);
+    left: var(--mwp-toc-width, 210px);
     z-index: 21;
   }
 }
