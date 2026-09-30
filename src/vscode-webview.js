@@ -59,10 +59,14 @@ window.addEventListener('message', event => {
         --mwp-mute: var(--vscode-descriptionForeground);
         --mwp-border: var(--vscode-panel-border, #88888840);
         --mwp-border-subtle: var(--vscode-panel-border, #88888820);
+        --mwp-code-bg: var(--vscode-textCodeBlock-background, var(--vscode-editor-background));
+        --mwp-code-header-bg: var(--vscode-sideBar-background, var(--vscode-editor-background));
+        --mwp-code-ink: var(--vscode-editor-foreground);
       }
       .mwp-root { font-family: var(--vscode-font-family); }
     `),
     React.createElement(Preview, { content: { kind: 'text', text: message.text, eof: true }, copyText, hostTheme: message.dark ? 'dark' : 'light',
+      exportPdf: (html, options) => api.postMessage({ type: 'exportPdf', html, accent: options.accent }),
       renderOptions: { resolveImage: src => resolveImage(src, message.resourceBase) } })
   ));
 });

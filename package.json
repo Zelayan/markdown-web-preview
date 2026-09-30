@@ -1,6 +1,6 @@
 {
   "name": "@local/markdown-web-preview",
-  "version": "0.3.1",
+  "version": "0.3.8",
   "private": true,
   "type": "module",
   "description": "Markdown web preview for DeepSeek Harness document tabs",

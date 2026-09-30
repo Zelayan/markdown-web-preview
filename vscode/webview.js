@@ -23547,6 +23547,48 @@
     }
   });
 
+  // vscode/print-html.cjs
+  var require_print_html = __commonJS({
+    "vscode/print-html.cjs"(exports, module) {
+      function createPrintHtml2(html3, title = "Markdown", nonce = "markdown-print", options2 = {}) {
+        const accent = typeof options2.accent === "string" && /^#[0-9a-f]{6}$/i.test(options2.accent) ? options2.accent : "#7c3aed";
+        const escape3 = (value) => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+        return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>${escape3(title)}</title><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https: http: file:; style-src 'unsafe-inline'; script-src 'nonce-${escape3(nonce)}';"><style>
+  @page { size: A4; margin: 18mm 16mm; }
+  html { --mwp-print-accent: ${accent}; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  li::marker { color: var(--mwp-print-accent); }
+  *, *::before, *::after { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 24px auto; max-width: 860px; padding: 0 24px; color: #24292f; background: white; font: 14px/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  h1,h2,h3,h4,h5,h6 { break-after: avoid; line-height: 1.3; margin: 18px 0 7px; }
+  h1 { font-size: 24px; } h2 { font-size: 20px; } h3 { font-size: 16px; }
+  p { margin: 0 0 8px; } ul,ol { margin: 5px 0 9px; padding-left: 22px; } li { margin-bottom: 3px; }
+  a { color: var(--mwp-print-accent); overflow-wrap: anywhere; } img { max-width: 100%; height: auto; }
+  code { font: 12px/1.45 monospace; color: var(--mwp-print-accent); background: #f3f4f6; padding: 1px 3px; border-radius: 3px; }
+  /* Paper-oriented code extracts, independent of the interactive preview. */
+  .mwp-code-block { margin: 10px 0 12px; background: #f8fafc; border: 1px solid #dbe1e8; border-left: 3px solid #64748b; border-radius: 4px; white-space: normal; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .mwp-code-header { padding: 6px 12px 0; background: transparent; border: 0; color: #64748b; font: 600 9px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; break-after: avoid; }
+  .mwp-code-block:is([data-lang="text" i], [data-lang="txt" i], [data-lang="plain" i], [data-lang="plaintext" i], [data-lang="code" i], [data-lang=""]) .mwp-code-header { display: none; }
+  .mwp-code-block:is([data-lang="text" i], [data-lang="txt" i], [data-lang="plain" i], [data-lang="plaintext" i], [data-lang="code" i], [data-lang=""]) pre { padding-top: 10px; }
+  pre { margin: 0; padding: 7px 12px 10px; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 4; }
+  pre code { display: block; padding: 0; border: 0; border-radius: 0; background: none; color: #263244; font: 11.5px/1.55 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .mwp-code-copy,.mwp-code-dots { display: none; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; } th,td { border: 1px solid #dfe1e6; padding: 5px 8px; overflow-wrap: anywhere; } th { background: #f3f4f6; } thead { display: table-header-group; } tr { break-inside: avoid; }
+  blockquote { border-left: 3px solid #64748b; background: #f6f8fa; padding: 8px 12px; margin: 9px 0; }
+  .mwp-callout-title { font-weight: bold; margin-bottom: 4px; }
+  .mwp-callout-note { border-color: #2563eb; background: #eff6ff; } .mwp-callout-note .mwp-callout-title { color: #2563eb; }
+  .mwp-callout-tip { border-color: #059669; background: #ecfdf5; } .mwp-callout-tip .mwp-callout-title { color: #047857; }
+  .mwp-callout-important { border-color: #7c3aed; background: #f5f3ff; } .mwp-callout-important .mwp-callout-title { color: #6d28d9; }
+  .mwp-callout-warning { border-color: #d97706; background: #fffbeb; } .mwp-callout-warning .mwp-callout-title { color: #b45309; }
+  .mwp-callout-caution { border-color: #dc2626; background: #fef2f2; } .mwp-callout-caution .mwp-callout-title { color: #b91c1c; }
+  .print-controls { margin-bottom: 24px; padding: 12px; background: #f3f4f6; font-size: 13px; }
+  button { padding: 6px 12px; cursor: pointer; }
+  @media print { body { margin: 0; max-width: none; padding: 0; } .print-controls { display: none; } }
+  </style></head><body><div class="print-controls"><button id="print">\u6253\u5370 / \u4FDD\u5B58\u4E3A PDF</button> \u5728\u6253\u5370\u7A97\u53E3\u9009\u62E9\u201C\u53E6\u5B58\u4E3A PDF\u201D\uFF0C\u5E76\u5728\u201C\u66F4\u591A\u8BBE\u7F6E\u201D\u4E2D\u52FE\u9009\u201C\u80CC\u666F\u56FE\u5F62\u201D\u4EE5\u4FDD\u7559\u80CC\u666F\u8272\u3002\u957F\u4EE3\u7801\u548C\u8868\u683C\u4F1A\u81EA\u52A8\u6362\u884C\u3002</div><main>${html3}</main><script nonce="${escape3(nonce)}">document.getElementById('print').addEventListener('click',()=>window.print());<\/script></body></html>`;
+      }
+      module.exports = { createPrintHtml: createPrintHtml2 };
+    }
+  });
+
   // src/vscode-webview.js
   var React = __toESM(require_react(), 1);
   var import_client = __toESM(require_client(), 1);
@@ -27804,9 +27846,9 @@ ${text2}</tr>
   --mwp-inline-code-bg: #f1f3f5;
   --mwp-inline-code-ink: #c026d3;
   --mwp-inline-code-border: #e2e8f0;
-  --mwp-code-bg: #1e1e2e;
-  --mwp-code-header-bg: #181825;
-  --mwp-code-ink: #cdd6f4;
+  --mwp-code-bg: #f6f8fa;
+  --mwp-code-header-bg: #eef1f5;
+  --mwp-code-ink: #24292f;
   --mwp-table-alt: #f9fafb;
   --mwp-table-th: #f3f4f6;
 
@@ -28384,7 +28426,7 @@ ${text2}</tr>
 .mwp-prose a {
   color: var(--mwp-accent);
   text-decoration: underline;
-  text-decoration-color: rgba(124, 58, 237, 0.3);
+  text-decoration-color: color-mix(in srgb, var(--mwp-accent) 35%, transparent);
   text-underline-offset: 1.5px;
   transition: all 0.1s ease;
 }
@@ -28474,7 +28516,7 @@ ${text2}</tr>
   font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, 'Fira Code', monospace;
   font-size: 12px;
   background: var(--mwp-inline-code-bg);
-  color: var(--mwp-inline-code-ink);
+  color: var(--mwp-accent);
   border: 1px solid var(--mwp-inline-code-border);
   border-radius: 4px;
   padding: 1px 5px;
@@ -28486,7 +28528,7 @@ ${text2}</tr>
   margin: 4px 0;
   border-radius: 5px;
   background: var(--mwp-code-bg);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--mwp-border);
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
   display: block;
@@ -28501,7 +28543,7 @@ ${text2}</tr>
   height: 22px;
   padding: 0 8px;
   background: var(--mwp-code-header-bg);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--mwp-border);
 }
 
 .mwp-code-header-left {
@@ -28526,7 +28568,7 @@ ${text2}</tr>
 .mwp-dot-green { background: #27c93f; }
 
 .mwp-code-lang {
-  color: #9399b2;
+  color: var(--mwp-ink-secondary);
   font: 600 10px/1 'SFMono-Regular', Menlo, monospace;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -28539,10 +28581,10 @@ ${text2}</tr>
   gap: 2px;
   height: 17px;
   padding: 0 5px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--mwp-border);
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #cdd6f4;
+  background: var(--mwp-surface);
+  color: var(--mwp-ink-secondary);
   font-size: 9.5px;
   line-height: 1;
   cursor: pointer;
@@ -28550,8 +28592,8 @@ ${text2}</tr>
 }
 
 .mwp-code-copy:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background: var(--mwp-accent-light);
+  color: var(--mwp-accent);
 }
 
 .mwp-code-copy.is-copied {
@@ -28777,6 +28819,9 @@ ${text2}</tr>
 }
 `;
 
+  // src/preview.js
+  var import_print_html = __toESM(require_print_html(), 1);
+
   // src/resize.js
   var DEFAULT_TOC_WIDTH = 211;
   var MIN_TOC_WIDTH = 140;
@@ -28873,7 +28918,7 @@ ${text2}</tr>
       }
       return Array.from(container.querySelectorAll("[id]")).find((el) => el.id === id) || null;
     };
-    function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText: copyText2, hostTheme }) {
+    function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText: copyText2, hostTheme, exportPdf }) {
       const text2 = content?.kind === "text" ? content.text : "";
       const { html: html3, headings, stats } = React2.useMemo(() => renderMarkdown(text2, document, renderOptions), [text2, renderOptions]);
       const [tocOpen, setTocOpen] = React2.useState(true);
@@ -29095,6 +29140,28 @@ ${text2}</tr>
           h(
             "div",
             { className: "mwp-toolbar-right" },
+            h("button", {
+              type: "button",
+              className: "mwp-tool-btn",
+              title: "\u6253\u5F00\u6253\u5370\u7248\uFF0C\u5728\u6253\u5370\u7A97\u53E3\u4FDD\u5B58\u4E3A PDF",
+              disabled: content?.kind === "text" && !content.eof,
+              onClick: () => {
+                const printOptions = { accent: (ACCENT_COLORS.find((color) => color.id === accentColor) || ACCENT_COLORS[0]).hex };
+                if (exportPdf) {
+                  exportPdf(html3, printOptions);
+                  return;
+                }
+                const printWindow = window.open("", "_blank");
+                if (!printWindow) {
+                  window.alert("\u8BF7\u5141\u8BB8\u5F39\u51FA\u7A97\u53E3\u540E\u91CD\u8BD5\u5BFC\u51FA PDF\u3002");
+                  return;
+                }
+                printWindow.opener = null;
+                printWindow.document.open();
+                printWindow.document.write((0, import_print_html.createPrintHtml)(html3, headings[0]?.title || "Markdown", "markdown-print", printOptions));
+                printWindow.document.close();
+              }
+            }, "\u5BFC\u51FA PDF"),
             h("span", { className: "mwp-stats-badge", title: "\u5927\u7EB2\u7AE0\u8282 \xB7 \u5B57\u6570" }, statsText),
             // Accent Color Palette Dropdown Picker
             h(
@@ -29293,6 +29360,9 @@ ${text2}</tr>
         --mwp-mute: var(--vscode-descriptionForeground);
         --mwp-border: var(--vscode-panel-border, #88888840);
         --mwp-border-subtle: var(--vscode-panel-border, #88888820);
+        --mwp-code-bg: var(--vscode-textCodeBlock-background, var(--vscode-editor-background));
+        --mwp-code-header-bg: var(--vscode-sideBar-background, var(--vscode-editor-background));
+        --mwp-code-ink: var(--vscode-editor-foreground);
       }
       .mwp-root { font-family: var(--vscode-font-family); }
     `),
@@ -29300,6 +29370,7 @@ ${text2}</tr>
         content: { kind: "text", text: message.text, eof: true },
         copyText,
         hostTheme: message.dark ? "dark" : "light",
+        exportPdf: (html3, options2) => api.postMessage({ type: "exportPdf", html: html3, accent: options2.accent }),
         renderOptions: { resolveImage: (src) => resolveImage(src, message.resourceBase) }
       })
     ));

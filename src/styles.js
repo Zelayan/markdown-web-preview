@@ -22,9 +22,9 @@ export const styles = `
   --mwp-inline-code-bg: #f1f3f5;
   --mwp-inline-code-ink: #c026d3;
   --mwp-inline-code-border: #e2e8f0;
-  --mwp-code-bg: #1e1e2e;
-  --mwp-code-header-bg: #181825;
-  --mwp-code-ink: #cdd6f4;
+  --mwp-code-bg: #f6f8fa;
+  --mwp-code-header-bg: #eef1f5;
+  --mwp-code-ink: #24292f;
   --mwp-table-alt: #f9fafb;
   --mwp-table-th: #f3f4f6;
 
@@ -602,7 +602,7 @@ export const styles = `
 .mwp-prose a {
   color: var(--mwp-accent);
   text-decoration: underline;
-  text-decoration-color: rgba(124, 58, 237, 0.3);
+  text-decoration-color: color-mix(in srgb, var(--mwp-accent) 35%, transparent);
   text-underline-offset: 1.5px;
   transition: all 0.1s ease;
 }
@@ -692,7 +692,7 @@ export const styles = `
   font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, 'Fira Code', monospace;
   font-size: 12px;
   background: var(--mwp-inline-code-bg);
-  color: var(--mwp-inline-code-ink);
+  color: var(--mwp-accent);
   border: 1px solid var(--mwp-inline-code-border);
   border-radius: 4px;
   padding: 1px 5px;
@@ -704,7 +704,7 @@ export const styles = `
   margin: 4px 0;
   border-radius: 5px;
   background: var(--mwp-code-bg);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--mwp-border);
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
   display: block;
@@ -719,7 +719,7 @@ export const styles = `
   height: 22px;
   padding: 0 8px;
   background: var(--mwp-code-header-bg);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--mwp-border);
 }
 
 .mwp-code-header-left {
@@ -744,7 +744,7 @@ export const styles = `
 .mwp-dot-green { background: #27c93f; }
 
 .mwp-code-lang {
-  color: #9399b2;
+  color: var(--mwp-ink-secondary);
   font: 600 10px/1 'SFMono-Regular', Menlo, monospace;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -757,10 +757,10 @@ export const styles = `
   gap: 2px;
   height: 17px;
   padding: 0 5px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--mwp-border);
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #cdd6f4;
+  background: var(--mwp-surface);
+  color: var(--mwp-ink-secondary);
   font-size: 9.5px;
   line-height: 1;
   cursor: pointer;
@@ -768,8 +768,8 @@ export const styles = `
 }
 
 .mwp-code-copy:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background: var(--mwp-accent-light);
+  color: var(--mwp-accent);
 }
 
 .mwp-code-copy.is-copied {

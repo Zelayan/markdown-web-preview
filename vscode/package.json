@@ -2,7 +2,7 @@
   "name": "markdown-web-preview",
   "displayName": "Markdown Web Preview",
   "description": "Markdown reading view with resizable outline, palette and compact typography",
-  "version": "0.3.1",
+  "version": "0.3.8",
   "publisher": "zelayan",
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Other"],

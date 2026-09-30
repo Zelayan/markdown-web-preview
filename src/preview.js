@@ -1,5 +1,6 @@
 import { renderMarkdown } from './render.js';
 import { styles } from './styles.js';
+import { createPrintHtml } from '../vscode/print-html.cjs';
 import {
   clampTocWidth,
   DEFAULT_TOC_WIDTH,
@@ -28,7 +29,7 @@ const findHeading = (container, id) => {
   return Array.from(container.querySelectorAll('[id]')).find(el => el.id === id) || null;
 };
 
-function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText, hostTheme }) {
+function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText, hostTheme, exportPdf }) {
   const text = content?.kind === 'text' ? content.text : '';
   const { html, headings, stats } = React.useMemo(() => renderMarkdown(text, document, renderOptions), [text, renderOptions]);
 
@@ -269,6 +270,20 @@ function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText, host
         )
       ),
       h('div', { className: 'mwp-toolbar-right' },
+        h('button', {
+          type: 'button', className: 'mwp-tool-btn', title: '打开打印版，在打印窗口保存为 PDF',
+          disabled: content?.kind === 'text' && !content.eof,
+          onClick: () => {
+            const printOptions = { accent: (ACCENT_COLORS.find(color => color.id === accentColor) || ACCENT_COLORS[0]).hex };
+            if (exportPdf) { exportPdf(html, printOptions); return; }
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) { window.alert('请允许弹出窗口后重试导出 PDF。'); return; }
+            printWindow.opener = null;
+            printWindow.document.open();
+            printWindow.document.write(createPrintHtml(html, headings[0]?.title || 'Markdown', 'markdown-print', printOptions));
+            printWindow.document.close();
+          },
+        }, '导出 PDF'),
         h('span', { className: 'mwp-stats-badge', title: '大纲章节 · 字数' }, statsText),
         // Accent Color Palette Dropdown Picker
         h('div', { className: 'mwp-color-picker-wrap' },

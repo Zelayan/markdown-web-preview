@@ -1,6 +1,9 @@
 const vscode = require('vscode');
 const crypto = require('node:crypto');
 const path = require('node:path');
+const fs = require('node:fs/promises');
+const os = require('node:os');
+const { createPrintHtml } = require('./print-html.cjs');
 
 function activate(context) {
   const panels = new Map();
@@ -35,6 +38,23 @@ function activate(context) {
     const subscriptions = [
       webview.onDidReceiveMessage(async message => {
         if (message?.type === 'ready') update();
+        if (message?.type === 'exportPdf' && typeof message.html === 'string') {
+          try {
+            let html = message.html;
+            if (uri.scheme === 'file') {
+              const resourceBase = webview.asWebviewUri(directory).toString().replace(/\/$/, '') + '/';
+              html = html.replaceAll(resourceBase, directory.toString().replace(/\/$/, '') + '/');
+            }
+            const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'markdown-web-preview-'));
+            const output = path.join(tempDir, 'print.html');
+            await fs.writeFile(output, createPrintHtml(html, path.basename(uri.path), crypto.randomBytes(18).toString('hex'), { accent: message.accent }), 'utf8');
+            const opened = await vscode.env.openExternal(vscode.Uri.file(output));
+            if (!opened) throw new Error('系统未能打开打印页面');
+            vscode.window.showInformationMessage('打印页面已打开。点击“打印 / 保存为 PDF”，选择另存为 PDF。');
+          } catch (error) {
+            vscode.window.showErrorMessage(`导出 PDF 失败：${error.message}`);
+          }
+        }
         if (message?.type === 'copy' && typeof message.text === 'string' && Number.isSafeInteger(message.id)) {
           try { await vscode.env.clipboard.writeText(message.text); void webview.postMessage({ type: 'copied', id: message.id, ok: true }); }
           catch { void webview.postMessage({ type: 'copied', id: message.id, ok: false }); }
