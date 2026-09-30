@@ -1,6 +1,14 @@
-# Markdown Web Preview · Harness 插件
+# Markdown Web Preview · Harness / VS Code / Cursor
 
-用网页阅读视图替换 `.md` / `.markdown` 文件预览（内置 Markdown 仍保留在查看器下拉菜单中）。
+两个平台共用 Markdown 渲染、阅读组件与排版样式。在 Harness 中提供网页阅读视图，在 VS Code / Cursor 中提供独立侧边预览；不替换各平台的内置 Markdown 编辑器。
+
+## 安装到 VS Code / Cursor
+
+从 [GitHub Releases](https://github.com/Zelayan/markdown-web-preview/releases) 下载 `.vsix`，在扩展面板菜单选择 **Install from VSIX…** 安装。
+
+打开 Markdown 文件后，在正文右键菜单选择 **Markdown: 打开增强预览**。也可通过命令面板、编辑器右上角按钮或文件树右键打开。
+
+支持未保存内容实时更新、相对路径图片、VS Code 主题跟随及代码复制。详细开发与安全说明见 [VS Code 说明](vscode/README.md)。
 
 ## 功能
 
@@ -37,4 +45,6 @@ pnpm run build
 
 ## 范围与限制
 
-当前版本仅接管 `.md` 与 `.markdown`，仅支持 HTTP(S) 远程图片；相对图片以 alt 文本占位。全文内容较长时沿用 Harness 的分页加载，向下滚动触发加载后续内容。外部链接会在新标签页打开。此插件不执行 Markdown 内的脚本或 HTML。
+当前版本支持 `.md` 与 `.markdown`。Harness 版仅支持 HTTP(S) 远程图片，相对图片以 alt 文本占位，并沿用 Harness 的分页加载。VS Code / Cursor 版支持文档所在目录及子目录的相对路径图片，禁止向上跳转与绝对路径。两端均不执行 Markdown 内的脚本或原生 HTML。
+
+目前不支持代码语法高亮、Wiki 双链及编辑器双向滚动同步。VS Code 入口已通过 API mock 自动化测试，真实 VS Code / Cursor 安装和视觉兼容性仍需用户验收。

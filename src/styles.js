@@ -1,31 +1,32 @@
 export const styles = `
 /* ==========================================================================
    Markdown Web Preview - Obsidian Reading Experience
-   Aesthetic: Obsidian Workspace · Purple Accent · Clean Markdown Note
+   Features: Color Themes · Compact Typography · Modern Developer Code Blocks
    ========================================================================== */
 
 .mwp-root {
   /* Obsidian Light Theme */
   --mwp-bg: #ffffff;
   --mwp-surface: #ffffff;
-  --mwp-sidebar-bg: #f8f9fa;
-  --mwp-border: #e6e8eb;
-  --mwp-border-subtle: #f0f2f5;
-  --mwp-ink: #22252a;
-  --mwp-ink-secondary: #5c6370;
-  --mwp-mute: #8c92a4;
-  --mwp-accent: #7c3aed; /* Obsidian Purple */
-  --mwp-accent-light: #f5f3ff;
+  --mwp-sidebar-bg: #f9fafb;
+  --mwp-border: #e5e7eb;
+  --mwp-border-subtle: #f3f4f6;
+  --mwp-ink: #1f2937;
+  --mwp-ink-secondary: #4b5563;
+  --mwp-mute: #9ca3af;
+  --mwp-accent: #7c3aed; /* Obsidian Purple Default */
+  --mwp-accent-light: rgba(124, 58, 237, 0.08);
   --mwp-accent-hover: #6d28d9;
-  --mwp-code-bg: #f3f4f6;
-  --mwp-code-ink: #c026d3;
-  --mwp-pre-bg: #1e1e2e;
-  --mwp-pre-header-bg: #181825;
-  --mwp-pre-ink: #cdd6f4;
-  --mwp-table-alt: #fafbfc;
+
+  /* Modern clean code styling */
+  --mwp-inline-code-bg: #f1f3f5;
+  --mwp-inline-code-ink: #c026d3;
+  --mwp-inline-code-border: #e2e8f0;
+  --mwp-code-bg: #1e1e2e;
+  --mwp-code-header-bg: #181825;
+  --mwp-code-ink: #cdd6f4;
+  --mwp-table-alt: #f9fafb;
   --mwp-table-th: #f3f4f6;
-  --mwp-callout-bg: #f5f3ff;
-  --mwp-callout-border: #7c3aed;
 
   display: flex;
   flex-direction: column;
@@ -37,57 +38,73 @@ export const styles = `
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   position: relative;
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
-/* Obsidian Dark Theme (Obsidian Default Dark Mode) */
+/* Obsidian Dark Theme */
 .mwp-root.theme-dark {
-  --mwp-bg: #1e1e1e;
-  --mwp-surface: #1e1e1e;
-  --mwp-sidebar-bg: #181818;
-  --mwp-border: #2d2d2d;
-  --mwp-border-subtle: #242424;
-  --mwp-ink: #dcddde;
-  --mwp-ink-secondary: #a6abb4;
-  --mwp-mute: #727782;
-  --mwp-accent: #a78bfa; /* Obsidian Light Purple */
-  --mwp-accent-light: #2e2646;
+  --mwp-bg: #161618;
+  --mwp-surface: #1e1e20;
+  --mwp-sidebar-bg: #121214;
+  --mwp-border: #2c2c30;
+  --mwp-border-subtle: #222226;
+  --mwp-ink: #e2e2e5;
+  --mwp-ink-secondary: #a0a0a8;
+  --mwp-mute: #70707a;
+  --mwp-accent: #a78bfa;
+  --mwp-accent-light: rgba(167, 139, 250, 0.12);
   --mwp-accent-hover: #c4b5fd;
-  --mwp-code-bg: #282828;
-  --mwp-code-ink: #e879f9;
-  --mwp-pre-bg: #161616;
-  --mwp-pre-header-bg: #1e1e1e;
-  --mwp-pre-ink: #d4d4d4;
-  --mwp-table-alt: #1c1c1c;
-  --mwp-table-th: #262626;
-  --mwp-callout-bg: #272138;
-  --mwp-callout-border: #a78bfa;
+
+  --mwp-inline-code-bg: #27272a;
+  --mwp-inline-code-ink: #f472b6;
+  --mwp-inline-code-border: #3f3f46;
+  --mwp-code-bg: #0d0e12;
+  --mwp-code-header-bg: #181920;
+  --mwp-code-ink: #d4d4d8;
+  --mwp-table-alt: #1a1a1d;
+  --mwp-table-th: #242428;
 }
 
 @media (prefers-color-scheme: dark) {
   .mwp-root:not(.theme-light) {
-    --mwp-bg: #1e1e1e;
-    --mwp-surface: #1e1e1e;
-    --mwp-sidebar-bg: #181818;
-    --mwp-border: #2d2d2d;
-    --mwp-border-subtle: #242424;
-    --mwp-ink: #dcddde;
-    --mwp-ink-secondary: #a6abb4;
-    --mwp-mute: #727782;
+    --mwp-bg: #161618;
+    --mwp-surface: #1e1e20;
+    --mwp-sidebar-bg: #121214;
+    --mwp-border: #2c2c30;
+    --mwp-border-subtle: #222226;
+    --mwp-ink: #e2e2e5;
+    --mwp-ink-secondary: #a0a0a8;
+    --mwp-mute: #70707a;
     --mwp-accent: #a78bfa;
-    --mwp-accent-light: #2e2646;
+    --mwp-accent-light: rgba(167, 139, 250, 0.12);
     --mwp-accent-hover: #c4b5fd;
-    --mwp-code-bg: #282828;
-    --mwp-code-ink: #e879f9;
-    --mwp-pre-bg: #161616;
-    --mwp-pre-header-bg: #1e1e1e;
-    --mwp-pre-ink: #d4d4d4;
-    --mwp-table-alt: #1c1c1c;
-    --mwp-table-th: #262626;
-    --mwp-callout-bg: #272138;
-    --mwp-callout-border: #a78bfa;
+
+    --mwp-inline-code-bg: #27272a;
+    --mwp-inline-code-ink: #f472b6;
+    --mwp-inline-code-border: #3f3f46;
+    --mwp-code-bg: #0d0e12;
+    --mwp-code-header-bg: #181920;
+    --mwp-code-ink: #d4d4d8;
+    --mwp-table-alt: #1a1a1d;
+    --mwp-table-th: #242428;
   }
 }
+
+/* Palette Presets */
+.mwp-root.color-blue { --mwp-accent: #2563eb; --mwp-accent-hover: #1d4ed8; --mwp-accent-light: rgba(37, 99, 235, 0.1); }
+.mwp-root.color-blue.theme-dark { --mwp-accent: #60a5fa; --mwp-accent-hover: #93c5fd; --mwp-accent-light: rgba(96, 165, 250, 0.15); }
+
+.mwp-root.color-emerald { --mwp-accent: #059669; --mwp-accent-hover: #047857; --mwp-accent-light: rgba(5, 150, 105, 0.1); }
+.mwp-root.color-emerald.theme-dark { --mwp-accent: #34d399; --mwp-accent-hover: #6ee7b7; --mwp-accent-light: rgba(52, 211, 153, 0.15); }
+
+.mwp-root.color-amber { --mwp-accent: #d97706; --mwp-accent-hover: #b45309; --mwp-accent-light: rgba(217, 119, 6, 0.1); }
+.mwp-root.color-amber.theme-dark { --mwp-accent: #fbbf24; --mwp-accent-hover: #fcd34d; --mwp-accent-light: rgba(251, 191, 36, 0.15); }
+
+.mwp-root.color-rose { --mwp-accent: #e11d48; --mwp-accent-hover: #be123c; --mwp-accent-light: rgba(225, 29, 72, 0.1); }
+.mwp-root.color-rose.theme-dark { --mwp-accent: #fb7185; --mwp-accent-hover: #fda4af; --mwp-accent-light: rgba(251, 113, 133, 0.15); }
+
+.mwp-root.color-slate { --mwp-accent: #475569; --mwp-accent-hover: #334155; --mwp-accent-light: rgba(71, 85, 105, 0.1); }
+.mwp-root.color-slate.theme-dark { --mwp-accent: #94a3b8; --mwp-accent-hover: #cbd5e1; --mwp-accent-light: rgba(148, 163, 184, 0.15); }
 
 .mwp-root * {
   box-sizing: border-box;
@@ -114,7 +131,7 @@ export const styles = `
 }
 
 /* --------------------------------------------------------------------------
-   Obsidian Top Header Toolbar (36px)
+   Top Toolbar (Clean & Distraction Free: 36px)
    -------------------------------------------------------------------------- */
 .mwp-toolbar {
   height: 36px;
@@ -135,27 +152,6 @@ export const styles = `
   gap: 8px;
 }
 
-.mwp-obsidian-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 600;
-  font-size: 12.5px;
-  color: var(--mwp-ink);
-}
-
-.mwp-obsidian-icon {
-  display: grid;
-  place-items: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  background: var(--mwp-accent);
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: bold;
-}
-
 .mwp-toolbar-center {
   flex: 1;
   max-width: 280px;
@@ -167,7 +163,7 @@ export const styles = `
   align-items: center;
   gap: 6px;
   width: 100%;
-  height: 26px;
+  height: 25px;
   padding: 0 8px;
   border: 1px solid var(--mwp-border);
   border-radius: 4px;
@@ -217,7 +213,7 @@ export const styles = `
 .mwp-toolbar-right {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .mwp-stats-badge {
@@ -229,20 +225,82 @@ export const styles = `
   color: var(--mwp-mute);
   font-size: 11px;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  margin-right: 4px;
+  margin-right: 2px;
+}
+
+/* Color Palette Picker */
+.mwp-color-picker-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.mwp-color-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid var(--mwp-border);
+  border-radius: 4px;
+  background: var(--mwp-surface);
+  color: var(--mwp-ink-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.mwp-color-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--mwp-accent);
+}
+
+.mwp-color-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  padding: 6px;
+  background: var(--mwp-surface);
+  border: 1px solid var(--mwp-border);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  gap: 6px;
+  z-index: 50;
+}
+
+.mwp-color-chip {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.mwp-color-chip:hover {
+  transform: scale(1.15);
+}
+
+.mwp-color-chip.is-active {
+  border-color: var(--mwp-ink);
+  transform: scale(1.1);
 }
 
 .mwp-tool-btn {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  height: 25px;
+  height: 24px;
   padding: 0 7px;
   border: 1px solid transparent;
   border-radius: 4px;
   background: transparent;
   color: var(--mwp-ink-secondary);
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.1s ease;
@@ -263,13 +321,13 @@ export const styles = `
   display: flex;
   align-items: center;
   gap: 4px;
-  height: 25px;
+  height: 24px;
   padding: 0 7px;
   border: 1px solid var(--mwp-border);
   border-radius: 4px;
   background: var(--mwp-surface);
   color: var(--mwp-ink-secondary);
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.1s ease;
@@ -307,14 +365,14 @@ export const styles = `
 }
 
 .mwp-nav {
-  width: var(--mwp-toc-width, 220px);
-  min-width: var(--mwp-toc-width, 220px);
-  flex: 0 0 var(--mwp-toc-width, 220px);
+  width: var(--mwp-toc-width, 210px);
+  min-width: var(--mwp-toc-width, 210px);
+  flex: 0 0 var(--mwp-toc-width, 210px);
   display: flex;
   flex-direction: column;
   background: var(--mwp-sidebar-bg);
   border-right: 1px solid var(--mwp-border);
-  padding: 10px 8px 8px 10px;
+  padding: 8px 6px 6px 8px;
   user-select: none;
 }
 
@@ -322,12 +380,12 @@ export const styles = `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   padding-left: 2px;
 }
 
 .mwp-nav-title {
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--mwp-mute);
   text-transform: uppercase;
@@ -359,13 +417,13 @@ export const styles = `
   gap: 5px;
   width: 100%;
   border: 0;
-  border-radius: 4px;
-  padding: 4px 6px 4px calc(6px + var(--mwp-level, 0) * 10px);
+  border-radius: 3px;
+  padding: 3px 5px 3px calc(5px + var(--mwp-level, 0) * 9px);
   background: transparent;
   color: var(--mwp-ink-secondary);
   text-align: left;
   font-size: 11.5px;
-  line-height: 1.35;
+  line-height: 1.3;
   cursor: pointer;
   transition: all 0.08s ease;
   overflow: hidden;
@@ -393,7 +451,7 @@ export const styles = `
 .mwp-empty {
   font-size: 11px;
   color: var(--mwp-mute);
-  padding: 10px 4px;
+  padding: 8px 4px;
   text-align: center;
 }
 
@@ -423,7 +481,7 @@ export const styles = `
 }
 
 /* --------------------------------------------------------------------------
-   Obsidian Note Viewport (Full Bleed Clean Note Canvas)
+   Obsidian Note Viewport (Natural Flow, Clean Padding)
    -------------------------------------------------------------------------- */
 .mwp-scroller {
   min-width: 0;
@@ -437,72 +495,76 @@ export const styles = `
 }
 
 .mwp-article {
-  /* Obsidian Default Note Flow */
-  max-width: 900px;
+  max-width: 880px;
   margin: 0;
-  padding: 16px 28px 60px;
+  padding: 12px 24px 50px;
   transition: max-width 0.1s ease;
 }
 
 .mwp-article.is-wide {
   max-width: 100%;
-  padding-left: 24px;
-  padding-right: 24px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 /* --------------------------------------------------------------------------
    Obsidian Note Typography & Elements
+   Rhythm model: readable lines, restrained paragraph gaps, clear sections.
    -------------------------------------------------------------------------- */
 .mwp-prose {
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 13.5px;
+  line-height: 1.52 !important;
   color: var(--mwp-ink);
   overflow-wrap: anywhere;
+  /* Harness may inherit pre-wrap into document previews. That makes the
+     formatting whitespace between block tags visible as fake blank rows. */
+  white-space: normal !important;
 }
 
-/* Obsidian Clean Headings */
+/* Section rhythm: headings create hierarchy without opening large voids. */
 .mwp-prose h1 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.015em;
-  margin: 0 0 14px 0;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--mwp-border);
+  margin: 0 0 10px !important;
+  padding-bottom: 5px;
+  border-bottom: 1.5px solid var(--mwp-border);
   color: var(--mwp-ink);
-  line-height: 1.3;
+  line-height: 1.28 !important;
 }
 
 .mwp-prose h2 {
-  font-size: 19px;
+  font-size: 16px;
   font-weight: 650;
   letter-spacing: -0.01em;
-  margin: 24px 0 10px 0;
-  padding-bottom: 4px;
+  margin: 18px 0 7px !important;
+  padding-bottom: 3px;
   border-bottom: 1px solid var(--mwp-border-subtle);
   color: var(--mwp-ink);
-  line-height: 1.35;
+  line-height: 1.3 !important;
 }
 
 .mwp-prose h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 18px 0 8px 0;
+  font-size: 14.5px;
+  font-weight: 650;
+  margin: 14px 0 5px !important;
   color: var(--mwp-ink);
-  line-height: 1.4;
+  line-height: 1.35 !important;
 }
 
 .mwp-prose h4 {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 14px 0 6px 0;
+  font-size: 13.5px;
+  font-weight: 650;
+  margin: 10px 0 4px !important;
   color: var(--mwp-ink-secondary);
+  line-height: 1.4 !important;
 }
 
 .mwp-prose h1,
 .mwp-prose h2,
 .mwp-prose h3,
 .mwp-prose h4 {
-  scroll-margin-top: 18px;
+  scroll-margin-top: 10px;
   position: relative;
 }
 
@@ -518,15 +580,30 @@ export const styles = `
 }
 
 .mwp-prose p {
-  margin: 8px 0;
+  margin: 0 0 7px !important;
+  line-height: 1.52 !important;
+  white-space: normal !important;
 }
 
-/* Obsidian Internal / External Links */
+.mwp-prose p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* A source line break stays within the same paragraph and therefore follows
+   line-height only; it never receives additional paragraph spacing. */
+.mwp-prose p > br {
+  display: initial;
+  content: normal;
+  margin: 0;
+  line-height: inherit;
+}
+
+/* Links */
 .mwp-prose a {
   color: var(--mwp-accent);
   text-decoration: underline;
-  text-decoration-color: rgba(124, 58, 237, 0.35);
-  text-underline-offset: 2.5px;
+  text-decoration-color: rgba(124, 58, 237, 0.3);
+  text-underline-offset: 1.5px;
   transition: all 0.1s ease;
 }
 
@@ -540,49 +617,61 @@ export const styles = `
   font-weight: 650;
 }
 
-/* Obsidian Lists: clean indent, no excessive gaps */
+/* Lists use the same readable line rhythm with smaller item gaps. */
 .mwp-prose ul,
 .mwp-prose ol {
-  padding-left: 22px;
-  margin: 4px 0 8px 0;
+  padding-left: 20px !important;
+  margin: 3px 0 8px !important;
+  line-height: 1.48 !important;
+  white-space: normal !important;
 }
 
 .mwp-prose li {
-  margin: 2px 0;
-  padding-left: 2px;
+  margin: 0 0 3px !important;
+  padding-left: 2px !important;
+  line-height: 1.48 !important;
+  white-space: normal !important;
+}
+
+.mwp-prose li:last-child {
+  margin-bottom: 0 !important;
 }
 
 .mwp-prose li > p {
-  margin: 1px 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline !important;
+  line-height: inherit !important;
 }
 
 .mwp-prose li > ul,
 .mwp-prose li > ol {
-  margin: 2px 0 3px !important;
+  margin: 3px 0 1px !important;
+  display: block !important;
 }
 
 .mwp-prose li::marker {
   color: var(--mwp-accent);
 }
 
-/* Obsidian Task List Checkboxes */
+/* Task List Checkboxes */
 .mwp-task-item {
   list-style-type: none;
-  margin-left: -18px !important;
+  margin-left: -16px !important;
   display: flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 5px;
 }
 
 .mwp-task-check {
   display: inline-grid;
   place-items: center;
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   border: 1.5px solid var(--mwp-mute);
-  border-radius: 3px;
+  border-radius: 2.5px;
   background: var(--mwp-surface);
-  font-size: 10px;
+  font-size: 9px;
   line-height: 1;
   color: #ffffff;
   flex-shrink: 0;
@@ -595,51 +684,85 @@ export const styles = `
   font-weight: bold;
 }
 
-/* Obsidian Inline Code (Magenta / Red-Violet Highlight) */
+/* --------------------------------------------------------------------------
+   Redesigned Beautiful Code Styling
+   -------------------------------------------------------------------------- */
+/* Inline Code Pill */
 .mwp-prose code {
-  font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
-  font-size: 12.5px;
-  background: var(--mwp-code-bg);
-  color: var(--mwp-code-ink);
+  font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, 'Fira Code', monospace;
+  font-size: 12px;
+  background: var(--mwp-inline-code-bg);
+  color: var(--mwp-inline-code-ink);
+  border: 1px solid var(--mwp-inline-code-border);
   border-radius: 4px;
-  padding: 1.5px 5px;
+  padding: 1px 5px;
+  font-weight: 500;
 }
 
-/* Obsidian Code Blocks */
+/* Code Block: Mac Terminal Window Style with Window Buttons */
 .mwp-code-block {
-  margin: 12px 0;
-  border-radius: 6px;
-  background: var(--mwp-pre-bg);
-  border: 1px solid var(--mwp-border);
+  margin: 4px 0;
+  border-radius: 5px;
+  background: var(--mwp-code-bg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  display: block;
+  white-space: normal !important;
+  line-height: normal !important;
 }
 
 .mwp-code-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 12px;
-  background: var(--mwp-pre-header-bg);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  height: 22px;
+  padding: 0 8px;
+  background: var(--mwp-code-header-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+.mwp-code-header-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mwp-code-dots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.mwp-code-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.mwp-dot-red { background: #ff5f56; }
+.mwp-dot-yellow { background: #ffbd2e; }
+.mwp-dot-green { background: #27c93f; }
+
 .mwp-code-lang {
-  color: #a6adc8;
+  color: #9399b2;
   font: 600 10px/1 'SFMono-Regular', Menlo, monospace;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  margin-left: 6px;
 }
 
 .mwp-code-copy {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 2px 7px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
+  gap: 2px;
+  height: 17px;
+  padding: 0 5px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
   background: rgba(255, 255, 255, 0.06);
   color: #cdd6f4;
-  font-size: 11px;
+  font-size: 9.5px;
+  line-height: 1;
   cursor: pointer;
   transition: all 0.1s ease;
 }
@@ -657,39 +780,43 @@ export const styles = `
 }
 
 .mwp-code-block pre {
-  margin: 0;
-  padding: 10px 14px;
+  margin: 0 !important;
+  padding: 4px 10px 5px !important;
   overflow-x: auto;
-  line-height: 1.5;
-  background: transparent;
-  border: 0;
+  line-height: 1.28 !important;
+  background: transparent !important;
+  border: 0 !important;
 }
 
 .mwp-code-block pre code {
-  background: transparent;
-  padding: 0;
-  border: 0;
-  color: var(--mwp-pre-ink);
-  font-size: 12px;
+  background: transparent !important;
+  color: var(--mwp-code-ink) !important;
+  border: 0 !important;
+  padding: 0 !important;
+  font-size: 11.5px;
+  line-height: 1.28 !important;
+  font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+  display: block;
+  white-space: pre;
 }
 
 /* Fallback Raw HTML */
 .mwp-prose pre.mwp-raw-html {
   border: 1px solid var(--mwp-border);
   border-radius: 6px;
-  background: var(--mwp-code-bg);
-  padding: 8px 12px;
+  background: var(--mwp-sidebar-bg);
+  padding: 6px 10px;
   overflow-x: auto;
-  font-size: 12px;
+  font-size: 11.5px;
   white-space: pre-wrap;
-  margin: 8px 0;
+  margin: 6px 0;
 }
 
-/* Obsidian Tables */
+/* Tables */
 .mwp-table-wrap {
   width: 100%;
   overflow-x: auto;
-  margin: 12px 0;
+  margin: 8px 0;
   border: 1px solid var(--mwp-border);
   border-radius: 6px;
   background: var(--mwp-surface);
@@ -698,13 +825,13 @@ export const styles = `
 .mwp-prose table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 12.5px;
+  line-height: 1.4;
 }
 
 .mwp-prose th,
 .mwp-prose td {
-  padding: 7px 12px;
+  padding: 5px 9px;
   border-bottom: 1px solid var(--mwp-border);
   text-align: left;
   vertical-align: top;
@@ -725,27 +852,27 @@ export const styles = `
   border-bottom: 0;
 }
 
-/* Obsidian Native Callouts (Icon + Border-left + Header) */
+/* Callouts */
 .mwp-prose blockquote {
-  margin: 12px 0;
-  padding: 10px 14px;
-  border-left: 4px solid var(--mwp-accent);
-  background: var(--mwp-callout-bg);
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-left: 3.5px solid var(--mwp-accent);
+  background: var(--mwp-accent-light);
   border-radius: 4px;
   color: var(--mwp-ink);
 }
 
 .mwp-callout {
-  border-left-width: 4px;
+  border-left-width: 3.5px;
 }
 
 .mwp-callout-title {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font: 700 12px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  gap: 5px;
+  font: 700 11px/1 -apple-system, BlinkMacSystemFont, sans-serif;
   letter-spacing: -0.01em;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   text-transform: uppercase;
 }
 
@@ -782,7 +909,7 @@ export const styles = `
 .mwp-prose hr {
   border: 0;
   border-top: 1px solid var(--mwp-border);
-  margin: 20px 0;
+  margin: 16px 0;
 }
 
 .mwp-prose img {
@@ -791,32 +918,39 @@ export const styles = `
   border: 1px solid var(--mwp-border);
 }
 
+.mwp-page-note {
+  text-align: center;
+  padding: 8px 0;
+  color: var(--mwp-mute);
+  font-size: 11px;
+}
+
 .mwp-document-end {
   text-align: center;
   border-top: 1px solid var(--mwp-border);
-  margin-top: 36px;
-  padding-top: 16px;
+  margin-top: 24px;
+  padding-top: 12px;
   color: var(--mwp-mute);
-  font: 600 10px 'SFMono-Regular', Menlo, monospace;
+  font: 600 9.5px 'SFMono-Regular', Menlo, monospace;
   letter-spacing: 0.08em;
 }
 
 /* Floating Back-To-Top Button */
 .mwp-back-to-top {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
+  right: 18px;
+  bottom: 18px;
   display: flex;
   align-items: center;
-  gap: 3px;
-  padding: 4px 10px;
-  border-radius: 14px;
+  gap: 2px;
+  padding: 3px 8px;
+  border-radius: 12px;
   border: 1px solid var(--mwp-border);
   background: var(--mwp-surface);
   color: var(--mwp-ink-secondary);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 500;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   transition: all 0.1s ease;
   z-index: 10;
@@ -833,10 +967,10 @@ export const styles = `
 /* Responsive */
 @media (max-width: 700px) {
   .mwp-article {
-    padding: 12px 16px 40px;
+    padding: 10px 14px 30px;
   }
-  .mwp-prose h1 { font-size: 20px; }
-  .mwp-prose h2 { font-size: 17px; }
+  .mwp-prose h1 { font-size: 18px; }
+  .mwp-prose h2 { font-size: 15px; }
   .mwp-stats-badge { display: none; }
 }
 
@@ -855,7 +989,7 @@ export const styles = `
     position: absolute;
     top: 0;
     bottom: 0;
-    left: var(--mwp-toc-width, 220px);
+    left: var(--mwp-toc-width, 210px);
     z-index: 21;
   }
 }

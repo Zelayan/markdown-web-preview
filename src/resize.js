@@ -43,17 +43,23 @@ export function saveWide(storage, wide) {
   try { storage?.setItem(WIDE_KEY, String(wide)); } catch { /* private mode */ }
 }
 
-export const DENSITY_KEY = 'markdown-web-preview:density';
+export const COLOR_KEY = 'markdown-web-preview:accent-color';
+export const ACCENT_COLORS = [
+  { id: 'purple', name: '紫色', hex: '#7c3aed', darkHex: '#a78bfa' },
+  { id: 'blue', name: '经典蓝', hex: '#2563eb', darkHex: '#60a5fa' },
+  { id: 'emerald', name: '翡翠绿', hex: '#059669', darkHex: '#34d399' },
+  { id: 'amber', name: '琥珀橙', hex: '#d97706', darkHex: '#fbbf24' },
+  { id: 'rose', name: '玫瑰红', hex: '#e11d48', darkHex: '#fb7185' },
+  { id: 'slate', name: '极客灰', hex: '#475569', darkHex: '#94a3b8' },
+];
 
-export function loadDensity(storage) {
+export function loadAccentColor(storage) {
   try {
-    const val = storage?.getItem(DENSITY_KEY);
-    return ['compact', 'normal'].includes(val) ? val : 'compact';
-  } catch { return 'compact'; }
+    const val = storage?.getItem(COLOR_KEY);
+    return ACCENT_COLORS.some(c => c.id === val) ? val : 'purple';
+  } catch { return 'purple'; }
 }
 
-export function saveDensity(storage, density) {
-  try { storage?.setItem(DENSITY_KEY, density); } catch { /* private mode */ }
+export function saveAccentColor(storage, colorId) {
+  try { storage?.setItem(COLOR_KEY, colorId); } catch { /* private mode */ }
 }
-
-

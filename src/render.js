@@ -10,19 +10,16 @@ const renderer = new marked.Renderer();
 // Markdown is untrusted content. Render raw HTML as visible text, never as markup.
 renderer.html = (token) => `<pre class="mwp-raw-html">${escapeHTML(typeof token === 'string' ? token : token.text || '')}</pre>`;
 
-// Enhanced code block with language indicator and copy action button
+// Enhanced code block with terminal window dots, language banner, and copy button
 renderer.code = (token, maybeLang) => {
   const codeText = typeof token === 'string' ? token : (token?.text ?? '');
   const rawLang = typeof token === 'string' ? maybeLang : (token?.lang ?? '');
   const language = (rawLang || '').trim().split(/\s+/)[0];
-  const langLabel = language ? escapeHTML(language) : 'text';
-  return `<div class="mwp-code-block" data-lang="${langLabel}">
-    <div class="mwp-code-header">
-      <span class="mwp-code-lang">${langLabel}</span>
-      <button type="button" class="mwp-code-copy" aria-label="复制代码" title="复制代码">复制</button>
-    </div>
-    <pre><code class="language-${langLabel}">${escapeHTML(codeText)}</code></pre>
-  </div>`;
+  const langLabel = language ? escapeHTML(language) : 'code';
+  // Keep wrapper markup compact. Harness can apply `white-space: pre-wrap` to
+  // document content; indentation/newlines between block elements would then
+  // become visible blank rows around the header and <pre>.
+  return `<div class="mwp-code-block" data-lang="${langLabel}"><div class="mwp-code-header"><div class="mwp-code-header-left"><div class="mwp-code-dots" aria-hidden="true"><span class="mwp-code-dot mwp-dot-red"></span><span class="mwp-code-dot mwp-dot-yellow"></span><span class="mwp-code-dot mwp-dot-green"></span></div><span class="mwp-code-lang">${langLabel}</span></div><button type="button" class="mwp-code-copy" aria-label="复制代码" title="复制代码">复制</button></div><pre><code class="language-${langLabel}">${escapeHTML(codeText)}</code></pre></div>`;
 };
 
 // Safe task list checkboxes without insecure input elements
@@ -31,7 +28,7 @@ renderer.checkbox = (token) => {
   return `<span class="mwp-task-check ${checked ? 'is-checked' : 'is-unchecked'}" aria-hidden="true">${checked ? '✓' : ''}</span> `;
 };
 
-marked.setOptions({ gfm: true, breaks: false, renderer });
+marked.setOptions({ gfm: true, breaks: true, renderer });
 
 function safeLink(href) {
   try {
@@ -50,7 +47,7 @@ export function computeStats(text) {
   return { characters, words: totalWords, readTimeMinutes };
 }
 
-export function renderMarkdown(source, environment = document) {
+export function renderMarkdown(source, environment = document, options = {}) {
   const parsed = marked.parse(source || '');
   const clean = DOMPurify.sanitize(parsed, {
     FORBID_TAGS: ['style', 'script', 'iframe', 'object', 'embed', 'form', 'input', 'video', 'audio'],
@@ -125,8 +122,13 @@ export function renderMarkdown(source, environment = document) {
   // Only web images are allowed. Do not leak a local file path to a remote origin.
   for (const image of template.content.querySelectorAll('img')) {
     const src = image.getAttribute('src') || '';
-    if (!/^https?:\/\//i.test(src)) image.replaceWith(environment.createTextNode(image.alt || '[本地图片]'));
-    else image.setAttribute('loading', 'lazy');
+    const resolved = /^https?:\/\//i.test(src) ? src : options.resolveImage?.(src);
+    if (!resolved || !/^https?:\/\//i.test(resolved)) {
+      image.replaceWith(environment.createTextNode(image.alt || '[本地图片]'));
+    } else {
+      image.setAttribute('src', resolved);
+      image.setAttribute('loading', 'lazy');
+    }
   }
 
   return { html: template.innerHTML, headings, stats: computeStats(source) };

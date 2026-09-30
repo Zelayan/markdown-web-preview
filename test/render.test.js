@@ -45,6 +45,22 @@ test('formats code blocks with language banner and copy button', () => {
   assert.equal(block.querySelector('.mwp-code-lang').textContent, 'bash');
   assert.equal(block.querySelector('.mwp-code-copy').textContent, '复制');
   assert.equal(block.querySelector('code').textContent.trim(), 'echo "Hello World"');
+  assert.equal(block.firstChild.nodeType, 1);
+  assert.equal(block.childNodes.length, 2);
+  assert.equal(block.childNodes[0].className, 'mwp-code-header');
+  assert.equal(block.childNodes[1].tagName, 'PRE');
+});
+
+test('platform image resolver permits safe webview URLs without weakening defaults', () => {
+  const result = renderMarkdown('![local](./images/demo.png)', document, {
+    resolveImage: () => 'https://webview.test/docs/images/demo.png',
+  });
+  const element = document.createElement('div'); element.innerHTML = result.html;
+  assert.equal(element.querySelector('img').getAttribute('src'), 'https://webview.test/docs/images/demo.png');
+  const rejected = renderMarkdown('![local](./images/demo.png)', document, {
+    resolveImage: () => 'javascript:alert(1)',
+  });
+  assert.ok(!rejected.html.includes('<img'));
 });
 
 test('wraps markdown tables in responsive container and supports zebra striping', () => {

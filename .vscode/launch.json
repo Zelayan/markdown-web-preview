@@ -1,0 +1,10 @@
+{
+  "version": "0.2.0",
+  "configurations": [{
+    "name": "调试 Markdown Web Preview (VS Code)",
+    "type": "extensionHost",
+    "request": "launch",
+    "args": ["--extensionDevelopmentPath=${workspaceFolder}/vscode"],
+    "outFiles": ["${workspaceFolder}/vscode/**/*.cjs"]
+  }]
+}

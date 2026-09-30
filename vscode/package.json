@@ -1,0 +1,19 @@
+{
+  "name": "markdown-web-preview",
+  "displayName": "Markdown Web Preview",
+  "description": "Markdown reading view with resizable outline, palette and compact typography",
+  "version": "0.3.1",
+  "publisher": "zelayan",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "main": "./extension.cjs",
+  "activationEvents": ["onCommand:markdownWebPreview.openSide"],
+  "contributes": {
+    "commands": [{ "command": "markdownWebPreview.openSide", "title": "Markdown: 打开增强预览", "icon": "$(open-preview)" }],
+    "menus": {
+      "editor/title": [{ "command": "markdownWebPreview.openSide", "when": "editorLangId == markdown", "group": "navigation" }],
+      "editor/context": [{ "command": "markdownWebPreview.openSide", "when": "editorLangId == markdown", "group": "navigation@20" }],
+      "explorer/context": [{ "command": "markdownWebPreview.openSide", "when": "resourceExtname == .md || resourceExtname == .markdown", "group": "navigation@20" }]
+    }
+  }
+}
