@@ -77,6 +77,18 @@ pnpm dlx @vscode/vsce package --allow-missing-repository --skip-license --no-dep
 
 自动化测试覆盖 Harness 注册与交互、渲染安全、VS Code API 消息通道及打印版布局和配色。VS Code 入口使用 API mock 测试；真实编辑器主题、图片加载与最终 PDF 分页效果仍需实际验收。
 
+## v0.3.11 更新
+
+相对于 v0.3.8：
+
+- 新增工具栏字号调节：`A−` / `A+` 每次调整 0.5px，范围 12–22px；点击字号数值恢复默认。
+- 正文、标题、表格与代码按比例缩放，大纲和工具栏保持原大小；选择自动保存。
+- 默认设置统一为 **蓝色配色、浅色背景、14px 字号**，不覆盖已有合法偏好。
+- PDF 仍使用独立打印字号，不跟随阅读字号调节。
+- 新增字号持久化和默认偏好回归测试，当前 18 项测试通过。
+
+完整安装包见 [v0.3.11 Release](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.11)。
+
 ## v0.3.8 更新
 
 相对于 v0.3.1：

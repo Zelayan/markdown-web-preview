@@ -1,3 +1,17 @@
+export const DEFAULT_FONT_SIZE = 14;
+export const MIN_FONT_SIZE = 12;
+export const MAX_FONT_SIZE = 22;
+export const FONT_SIZE_KEY = 'markdown-web-preview:font-size';
+export function loadFontSize(storage) {
+  try {
+    const value = Number(storage?.getItem(FONT_SIZE_KEY));
+    return Number.isFinite(value) && value >= MIN_FONT_SIZE && value <= MAX_FONT_SIZE ? value : DEFAULT_FONT_SIZE;
+  } catch { return DEFAULT_FONT_SIZE; }
+}
+export function saveFontSize(storage, value) {
+  try { storage?.setItem(FONT_SIZE_KEY, String(value)); } catch {}
+}
+
 export const DEFAULT_TOC_WIDTH = 211;
 export const MIN_TOC_WIDTH = 140;
 export const MAX_TOC_WIDTH = 420;
@@ -25,8 +39,8 @@ export const WIDE_KEY = 'markdown-web-preview:wide';
 export function loadTheme(storage) {
   try {
     const val = storage?.getItem(THEME_KEY);
-    return ['light', 'dark', 'auto'].includes(val) ? val : 'auto';
-  } catch { return 'auto'; }
+    return ['light', 'dark', 'auto'].includes(val) ? val : 'light';
+  } catch { return 'light'; }
 }
 
 export function saveTheme(storage, theme) {
@@ -56,8 +70,8 @@ export const ACCENT_COLORS = [
 export function loadAccentColor(storage) {
   try {
     const val = storage?.getItem(COLOR_KEY);
-    return ACCENT_COLORS.some(c => c.id === val) ? val : 'purple';
-  } catch { return 'purple'; }
+    return ACCENT_COLORS.some(c => c.id === val) ? val : 'blue';
+  } catch { return 'blue'; }
 }
 
 export function saveAccentColor(storage, colorId) {

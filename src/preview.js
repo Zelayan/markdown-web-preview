@@ -13,6 +13,7 @@ import {
   loadAccentColor,
   saveAccentColor,
   ACCENT_COLORS,
+  DEFAULT_FONT_SIZE, MIN_FONT_SIZE, MAX_FONT_SIZE, loadFontSize, saveFontSize,
 } from './resize.js';
 
 export function createMarkdownPreview(React) {
@@ -33,6 +34,11 @@ function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText, host
   const text = content?.kind === 'text' ? content.text : '';
   const { html, headings, stats } = React.useMemo(() => renderMarkdown(text, document, renderOptions), [text, renderOptions]);
 
+  const [fontSize, setFontSize] = React.useState(() => loadFontSize(storage()));
+  const changeFontSize = value => {
+    const size = Math.max(MIN_FONT_SIZE, Math.min(MAX_FONT_SIZE, value));
+    setFontSize(size); saveFontSize(storage(), size);
+  };
   const [tocOpen, setTocOpen] = React.useState(true);
   const [tocWidth, setTocWidth] = React.useState(() => loadTocWidth(storage()));
   const [theme, setTheme] = React.useState(() => loadTheme(storage()));
@@ -270,6 +276,11 @@ function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText, host
         )
       ),
       h('div', { className: 'mwp-toolbar-right' },
+        h('div', { role: 'group', 'aria-label': '正文字号', style: { display: 'flex', gap: '2px' } },
+          h('button', { type: 'button', className: 'mwp-tool-btn', 'aria-label': '减小字号', disabled: fontSize <= MIN_FONT_SIZE, onClick: () => changeFontSize(fontSize - 0.5) }, 'A−'),
+          h('button', { type: 'button', className: 'mwp-tool-btn', title: '点击恢复默认字号', 'aria-label': '恢复默认字号', onClick: () => changeFontSize(DEFAULT_FONT_SIZE) }, `${fontSize}px`),
+          h('button', { type: 'button', className: 'mwp-tool-btn', 'aria-label': '增大字号', disabled: fontSize >= MAX_FONT_SIZE, onClick: () => changeFontSize(fontSize + 0.5) }, 'A+')
+        ),
         h('button', {
           type: 'button', className: 'mwp-tool-btn', title: '打开打印版，在打印窗口保存为 PDF',
           disabled: content?.kind === 'text' && !content.eof,
@@ -381,7 +392,7 @@ function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText, host
       // Obsidian Note Viewport
       h('div', { className: 'mwp-scroller', ref: setScroller, onClick: handleProseClick },
         h('article', { className: `mwp-article${isWide ? ' is-wide' : ''}` },
-          h('div', { className: 'mwp-prose', dangerouslySetInnerHTML: { __html: html } }),
+          h('div', { className: 'mwp-prose', style: { zoom: fontSize / 13.5 }, dangerouslySetInnerHTML: { __html: html } }),
           content?.kind === 'text' && !content.eof && h('div', { className: 'mwp-page-note', role: 'status' }, '文档正在分页加载 · 滚动到底部可读取后续内容')
         ),
         // Floating Back-to-Top Button
