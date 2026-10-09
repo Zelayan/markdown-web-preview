@@ -1,102 +1,229 @@
-# Markdown Web Preview · Harness / VS Code / Cursor
+# Markdown Web Preview
 
-两个平台共用 Markdown 渲染、阅读组件与排版样式。在 Harness 中提供网页阅读视图，在 VS Code / Cursor 中提供独立侧边预览；不替换各平台的内置 Markdown 编辑器。
+面向 **DeepSeek Harness、VS Code 和 Cursor** 的 Markdown 阅读预览插件。提供可调整宽度的大纲导航、实时预览、主题与字号设置，以及基于浏览器打印的 PDF 导出。
 
-## 安装到 VS Code / Cursor
+项目采用共用渲染组件与独立平台适配层，不替换编辑器，也不覆盖 VS Code / Cursor 的内置 Markdown 预览。
 
-从 [GitHub Releases](https://github.com/Zelayan/markdown-web-preview/releases) 下载 `.vsix`，在扩展面板菜单选择 **Install from VSIX…** 安装。更新时安装新版即可；如果仍显示旧界面，执行 **Developer: Reload Window** 并重新打开增强预览。
+**[下载最新版本](https://github.com/Zelayan/markdown-web-preview/releases/latest)** · **[版本记录](https://github.com/Zelayan/markdown-web-preview/releases)** · **[反馈问题](https://github.com/Zelayan/markdown-web-preview/issues)**
 
-打开 Markdown 文件后，在正文右键菜单选择 **Markdown: 打开增强预览**。也可通过命令面板、编辑器右上角按钮或文件树右键打开。
+## 目录
 
-支持未保存内容实时更新、相对路径图片、VS Code 主题跟随及代码复制。详细开发与安全说明见 [VS Code 说明](vscode/README.md)。
+- [主要功能](#主要功能)
+- [安装与启动](#安装与启动)
+- [平台支持](#平台支持)
+- [阅读设置](#阅读设置)
+- [PDF 导出](#pdf-导出)
+- [开发与构建](#开发与构建)
+- [安全与限制](#安全与限制)
+- [常见问题](#常见问题)
+- [版本摘要](#版本摘要)
 
-## 功能
+## 主要功能
 
-- **左侧目录 (TOC)**：多级中文标题自动唯一锚点；支持目录搜索、平滑滚动定位与当前章节高亮。
-- **宽度自由拖拽**：拖动目录与正文间的边界调整宽度（140–420 px），双击恢复默认；支持键盘方向键微调与持久化记忆。
-- **阅读排版**：舒适行距、克制段距和分层标题间距；支持「通栏 / 居中」、阅读进度、字数/用时预估及回到顶部。
-- **主题与配色**：明亮、暗黑、自动主题；六种强调色。行内代码、链接和列表序号跟随强调色，多行代码块跟随明暗主题。在 VS Code / Cursor 中，自动模式跟随编辑器主题。
-- **Markdown 元素**：代码块语言标签与复制按钮、可横向滚动的表格、GFM 任务清单、GitHub 风格 Callout（`[!NOTE]`、`[!TIP]`、`[!WARNING]` 等）。
-- **实时更新**：VS Code / Cursor 编辑停止约 120ms 后同步未保存内容；Harness 依赖宿主资源监听，保存到磁盘后更新，长文沿用分页加载。
-- **PDF 导出**：打开专用 A4 打印版，经浏览器打印窗口保存为 PDF，详见下节。
-- **安全处理**：原生 HTML 以文字显示；DOMPurify 过滤危险标签；限制链接和图片协议，避免将本地图片路径发送到远程图片服务器。
+| 功能 | 说明 |
+| --- | --- |
+| 大纲导航 | 多级标题、中文锚点、目录搜索、当前章节高亮与平滑定位 |
+| 可调整大纲 | 拖拽或键盘调整宽度，双击恢复默认，自动保存宽度 |
+| 阅读排版 | 分层标题、段落间距、居中或通栏布局、阅读进度与字数统计 |
+| 字号设置 | 12–22px，每次调整 0.5px；正文、标题、表格与代码按比例缩放 |
+| 主题与配色 | 浅色、深色、自动模式；六种强调色；代码块与主题联动 |
+| Markdown 渲染 | 表格、任务清单、GitHub 风格提示框、代码语言标签与复制按钮 |
+| 实时预览 | VS Code / Cursor 同步未保存内容；Harness 使用宿主资源监听 |
+| PDF 导出 | 独立 A4 打印排版，保留配色并移除阅读界面控件 |
 
-## 导出 PDF
+默认阅读设置为 **蓝色配色、浅色背景、14px 字号**。升级不会覆盖已保存的有效偏好。
 
-1. 在增强预览工具栏点击 **导出 PDF**。
-2. 浏览器打开正文打印版，点击 **打印 / 保存为 PDF**。
-3. 在打印窗口选择 **另存为 PDF**；在 **更多设置** 中勾选 **背景图形**，保留代码、表格和提示框背景色。
+## 安装与启动
 
-这是浏览器打印流程，需要手动确认保存，不是直接生成 PDF 的独立引擎。浏览器的打印选项优先于页面颜色设置。
+### VS Code / Cursor
 
-打印版特性：
+要求 VS Code API 版本 **1.85.0 或更高**；Cursor 需提供兼容的扩展 API。
 
-- A4 纸张，去除大纲、工具栏和复制按钮，统一采用浅色纸张排版。
-- 行内代码、链接和列表序号使用导出时选择的配色；提示框保留独立的语义颜色。
-- 多行代码使用浅灰底、细边框及灰蓝左边线，等宽字体与较宽松行距；长行自动换行。
-- 纯文本代码块隐藏 `text`、`txt`、`plain`、`plaintext` 和默认语言标签；`bash`、`json` 等明确语言标签仍保留。
-- 表格支持重复表头，行尽量避免跨页拆分；具体分页效果由浏览器决定。
-- Harness 文档未分页加载完整时禁用导出，避免遗漏正文。
+1. 从 [GitHub Releases](https://github.com/Zelayan/markdown-web-preview/releases/latest) 下载 `.vsix` 安装包。
+2. 打开扩展面板，选择 **⋯ → Install from VSIX…（从 VSIX 安装）**。
+3. 安装后打开 Markdown 文件，在正文右键菜单选择 **Markdown: 打开增强预览**。
 
-切换配色或修改文档后，需重新点击导出；已打开的打印页面是静态快照，不会自动更新。VS Code / Cursor 的打印页面写入系统临时目录后由系统打开；依赖本机 HTML 文件关联和浏览器打印能力，远程扩展宿主场景尚未验证。
+也可以通过以下入口打开预览：
 
-## 开发与测试
+- 命令面板：搜索 **Markdown: 打开增强预览**。
+- Markdown 编辑器右上角的预览按钮。
+- 文件树中的 Markdown 文件右键菜单。
 
-需要 Node.js 与 pnpm。在项目根目录执行：
+预览在侧边打开，并绑定到对应文件；再次打开同一文件会复用已有面板。当前通过 GitHub 分发安装包，**未发布到 VS Code Marketplace**。
+
+更新时安装新版 VSIX 即可。如果界面仍为旧版，执行 **Developer: Reload Window**，然后重新打开增强预览。
+
+### DeepSeek Harness
+
+1. 克隆本仓库，或准备包含构建产物的项目目录。
+2. 在 Harness 的插件页选择安装**本地组合包**，填写项目目录的绝对路径。
+3. 打开 `.md` 或 `.markdown` 文件，在右侧预览的查看器选项中选择 **网页阅读**。
+
+原有 Markdown 和纯文本查看方式仍保留。安装器若要求授权依赖构建脚本，请核对包名后再确认。
+
+> 插件安装影响当前 profile 下的会话。仅修改工作区代码不会自动更新已安装插件；更新后可能需要刷新 GUI 或重启 Harness。
+
+## 平台支持
+
+| 行为 | Harness | VS Code / Cursor |
+| --- | --- | --- |
+| 打开方式 | 文档查看器中的「网页阅读」 | 命令、正文右键、文件树右键、编辑器按钮 |
+| 内容更新 | 保存后依赖宿主资源监听 | 停止编辑约 120ms 后同步，无需保存 |
+| 长文加载 | 沿用宿主分页机制 | 使用当前文档全文 |
+| 自动主题 | 跟随系统明暗模式 | 跟随编辑器明暗模式 |
+| HTTP(S) 图片 | 支持 | 支持 |
+| 相对路径图片 | 显示 alt 文本占位 | 支持文档所在目录及其子目录 |
+| PDF 打印入口 | 打开浏览器打印页面 | 经扩展宿主打开系统临时打印页面 |
+
+外部程序修改文件后，VS Code / Cursor 将磁盘变更同步到文档时，预览会随之更新。存在未保存编辑或文件冲突时，应先按编辑器提示处理。
+
+## 阅读设置
+
+工具栏提供以下操作：
+
+- **A− / A+**：减小或增大字号；点击中间的字号数值恢复 **14px**。
+- **配色**：选择紫、蓝、绿、橙、红或灰色强调色。行内代码、链接与列表序号跟随所选配色。
+- **主题**：切换浅色、深色或自动模式。多行代码块的背景、文字和控件跟随明暗主题。
+- **居中 / 通栏**：切换正文宽度。
+- **大纲**：展开或收起目录；拖动目录边界调整宽度，双击恢复默认。
+
+大纲宽度范围为 140–420px，并受可用视口宽度限制。字号调整仅作用于正文阅读区域，工具栏和大纲字号保持不变。
+
+阅读偏好会保存。需要使用新版默认外观时，手动选择蓝色、浅色，并点击字号数值恢复默认即可。
+
+## PDF 导出
+
+### 操作步骤
+
+1. 在预览工具栏点击 **导出 PDF**。
+2. 浏览器打开打印版后，点击 **打印 / 保存为 PDF**。
+3. 在打印窗口选择 **另存为 PDF**。
+4. 在 **更多设置** 中勾选 **背景图形**，以保留代码、表格和提示框背景色。
+
+本功能使用浏览器打印能力，**需要手动确认保存**，不是直接生成文件的 PDF 引擎。浏览器或系统的打印选项可能覆盖页面的颜色设置。
+
+### 打印排版
+
+- 默认 A4 纸张和浅色页面，移除大纲、工具栏、复制按钮及终端装饰。
+- 行内代码、链接和列表序号使用导出时所选配色；提示框保留语义颜色。
+- 多行代码采用浅灰底、细边框、灰蓝左边线与等宽字体，长行自动换行。
+- 隐藏 `text`、`txt`、`plain`、`plaintext` 和默认代码语言标签；保留 `bash`、`json` 等明确语言标签。
+- 表格设置重复表头，尽量避免行跨页拆分；最终分页由浏览器决定。
+- 使用独立打印字号，**不跟随阅读字号调节**。
+
+打印页面是导出时的静态快照。修改文档或配色后需重新导出，旧打印页面不会自动更新。Harness 分页文档尚未加载完整时禁用导出，避免遗漏后续内容。
+
+VS Code / Cursor 会把打印页面写入系统临时目录，再通过系统文件关联打开。此流程依赖本机浏览器或 HTML 关联程序；远程扩展宿主场景尚未验证。
+
+## 开发与构建
+
+### 环境准备
+
+需要 Node.js 与 pnpm。依赖的 Node.js 版本要求以安装时各包的 `engines` 声明为准。
 
 ```sh
+git clone https://github.com/Zelayan/markdown-web-preview.git
+cd markdown-web-preview
 pnpm install
 pnpm run build
 pnpm test
 ```
 
-构建会同时输出 Harness 的 `lib/client.js` 和 VS Code / Cursor 的 `vscode/webview.js`。修改渲染组件或样式后需重新构建。
+### 项目结构
 
-在 VS Code 中打开项目根目录，按 F5，选择 **调试 Markdown Web Preview (VS Code)**，即可在扩展开发宿主试用。
+```text
+src/
+  client.js              # Harness 入口
+  preview.js             # 共用阅读组件
+  render.js              # Markdown 解析与安全处理
+  styles.js              # 共用阅读样式
+  resize.js              # 布局与阅读偏好
+  vscode-webview.js       # VS Code / Cursor Webview 入口
+vscode/
+  extension.cjs          # 扩展宿主、文档监听与消息桥接
+  print-html.cjs         # 两端共用的打印页面生成器
+  package.json           # VS Code 扩展清单
+scripts/
+  build.mjs              # 双平台构建
+test/                    # 自动化测试
+```
 
-打包 VSIX：
+### 构建命令
+
+| 命令 | 用途 |
+| --- | --- |
+| `pnpm run build` | 构建两个平台 |
+| `pnpm run build:harness` | 仅构建 Harness |
+| `pnpm run build:vscode` | 仅构建 VS Code / Cursor Webview |
+| `pnpm test` | 执行自动化测试 |
+
+构建产物为 `lib/client.js` 和 `vscode/webview.js`。修改组件、渲染逻辑或样式后，应重新构建。
+
+在 VS Code 中打开项目根目录，按 F5 并选择 **调试 Markdown Web Preview (VS Code)**，可启动扩展开发宿主。更多说明见 [扩展开发指南](vscode/README.md)。
+
+### 打包 VSIX
+
+先在项目根目录完成构建，再执行：
 
 ```sh
 cd vscode
 pnpm dlx @vscode/vsce package --allow-missing-repository --skip-license --no-dependencies
 ```
 
-安装包作为 GitHub Release 附件发布，不提交到源码仓库。当前未发布到 VS Code Marketplace。
+VSIX 作为 GitHub Release 附件分发，不提交到源码仓库。当前打包命令允许缺少 repository 字段并跳过 license 检查，不代表已满足 Marketplace 发布要求。
 
-## 安装到 Harness
+## 安全与限制
 
-在 DeepSeek Harness 的「插件」页选择安装**本地组合包**，输入克隆后本目录的绝对路径（例如 `$HOME/projects/markdown-web-preview`）。若安装器要求授权依赖的构建脚本，请先确认包名再决定是否授权。安装成功后打开 `.md` 文件，在右侧预览的查看器选项中选择「网页阅读」。已有 Markdown/纯文本查看方式仍保留。
+### 内容处理
 
-> 安装会影响此 profile 的全部会话，需由使用者在插件页确认。只复制文件到工作区不会自动安装或更新当前 GUI。安装后若当前页面未同步，请刷新已有 GUI；已安装包中的 JavaScript 被覆盖后可能需要重启 Harness。
+- 仅允许 `<br>` 换行及简单 `<span id="…">` 锚点（不含事件或样式属性）；其他 Markdown 原生 HTML 以文字显示，不作为可执行标记渲染。
+- 使用 DOMPurify 过滤危险标签和属性，并限制链接与图片协议。
+- VS Code Webview 使用 CSP 限制脚本来源，剪贴板写入经扩展宿主执行。
+- 相对路径图片限定在文档所在目录及子目录内，不支持绝对路径或向上跳转。
+- HTTP(S) 远程图片仍会产生网络请求；敏感文档应注意远程资源来源。
 
-## 范围与验证
+### 尚未支持
 
-支持 `.md` 与 `.markdown`。Harness 版仅支持 HTTP(S) 远程图片，相对图片以 alt 文本占位。VS Code / Cursor 版支持文档所在目录及子目录中的相对路径图片，禁止向上跳转与绝对路径。
+- 代码语法高亮。
+- Wiki 双链解析。
+- 编辑器与预览双向滚动同步。
+- 无交互、直接生成 PDF 文件。
 
-不支持代码语法高亮、Wiki 双链及编辑器双向滚动同步。两端均不执行 Markdown 内的脚本或原生 HTML。
+### 验证范围
 
-自动化测试覆盖 Harness 注册与交互、渲染安全、VS Code API 消息通道及打印版布局和配色。VS Code 入口使用 API mock 测试；真实编辑器主题、图片加载与最终 PDF 分页效果仍需实际验收。
+v0.3.12 包含 **19 项自动化测试**，覆盖 Harness 插件注册与交互、Markdown 渲染安全、VS Code API 消息通道、阅读偏好及打印版布局与配色。
 
-## v0.3.11 更新
+VS Code 入口采用 API mock 测试。真实 VS Code / Cursor 版本兼容性、主题表现、本地图片和最终 PDF 分页效果，仍需实际环境验证。
 
-相对于 v0.3.8：
+## 常见问题
 
-- 新增工具栏字号调节：`A−` / `A+` 每次调整 0.5px，范围 12–22px；点击字号数值恢复默认。
-- 正文、标题、表格与代码按比例缩放，大纲和工具栏保持原大小；选择自动保存。
-- 默认设置统一为 **蓝色配色、浅色背景、14px 字号**，不覆盖已有合法偏好。
-- PDF 仍使用独立打印字号，不跟随阅读字号调节。
-- 新增字号持久化和默认偏好回归测试，当前 18 项测试通过。
+### 找不到「打开增强预览」命令
 
-完整安装包见 [v0.3.11 Release](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.11)。
+确认扩展 **Markdown Web Preview** 已安装并启用，打开 Markdown 文件，再从命令面板搜索「增强预览」。必要时执行 **Developer: Reload Window**。其他插件提供的预览命令不属于本扩展。
 
-## v0.3.8 更新
+### 更新后没有使用蓝色、浅色或 14px
 
-相对于 v0.3.1：
+更新会保留已有有效偏好。请在工具栏手动选择配色和主题，并点击字号数值恢复默认。
 
-- 代码块背景、标签与复制按钮跟随全局明暗主题。
-- 修复行内代码和链接下划线固定紫色的问题。
-- 新增两端 PDF 打印导出、彩色打印提示与提示框语义配色。
-- PDF 使用独立的文档摘录式代码块，隐藏纯文本语言标签。
-- 修复 PDF 配色未接收当前预览选择的问题，并增加回归测试。
+### PDF 背景色消失或配色没有变化
 
-完整安装包见 [v0.3.8 Release](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.8)。
+在打印设置中开启「背景图形」。切换配色后需重新导出，并使用新打开的打印页面保存。
+
+### PDF 字号为什么不随阅读字号变化
+
+阅读视图和打印版使用独立排版，避免屏幕缩放破坏 A4 分页。当前字号控件只调整阅读区域。
+
+### 相对路径图片为什么不显示
+
+Harness 版不加载相对路径图片。VS Code / Cursor 版仅允许文档所在目录及子目录，请检查路径、文件是否存在，以及是否包含 `../` 向上跳转。
+
+## 版本摘要
+
+| 版本 | 主要变更 |
+| --- | --- |
+| [v0.3.12](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.12) | 修复表格 `<br>` 换行与简单 `span` 锚点；专业化 README；HTML 白名单安全回归测试 |
+| [v0.3.11](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.11) | 字号调节；默认蓝色、浅色背景、14px；偏好回归测试 |
+| [v0.3.8](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.8) | 彩色 PDF 打印导出、打印代码块排版、主题与配色同步 |
+| [v0.3.1](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.1) | VS Code / Cursor 侧边预览适配及 Markdown 正文右键入口 |
+
+完整发布记录及安装包见 [GitHub Releases](https://github.com/Zelayan/markdown-web-preview/releases)。

@@ -42,7 +42,7 @@ pnpm dlx @vscode/vsce package --allow-missing-repository --skip-license --no-dep
 
 ## 安全与范围
 
-- Markdown 中原生 HTML 以文字显示，不执行脚本。
+- 仅支持 `<br>` 换行和简单 `<span id="…">` 锚点，不保留事件或样式属性；其他原生 HTML 以文字显示，不执行脚本。
 - 使用 CSP 限制脚本来源，只允许扩展自己的脚本。
 - 本地图片仅允许文档所在目录及其子目录中的相对路径，禁止绝对路径和向上跳转；远程 HTTP/HTTPS 图片保持支持。
 - 剪贴板操作经扩展宿主执行，避免 Webview 剪贴板权限问题。

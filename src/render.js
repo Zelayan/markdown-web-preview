@@ -7,8 +7,18 @@ const escapeHTML = (value) => String(value).replace(/[&<>"']/g, character => ({
 
 const renderer = new marked.Renderer();
 
-// Markdown is untrusted content. Render raw HTML as visible text, never as markup.
-renderer.html = (token) => `<pre class="mwp-raw-html">${escapeHTML(typeof token === 'string' ? token : token.text || '')}</pre>`;
+// Only narrowly defined inline HTML is supported. Never pass arbitrary HTML
+// through, and never retain event handlers, styling or script-bearing URLs.
+renderer.html = (token) => {
+  const raw = typeof token === 'string' ? token : token.text || '';
+  const tag = raw.trim();
+  if (/^<br\s*\/?\s*>$/i.test(tag)) return '<br>';
+  if (/^<\/span\s*>$/i.test(tag)) return '</span>';
+  if (/^<span\s*>$/i.test(tag)) return '<span>';
+  const anchor = tag.match(/^<span\s+id\s*=\s*(["'])([\p{L}\p{N}_-]+)\1\s*>$/iu);
+  if (anchor) return `<span id="${escapeHTML(anchor[2])}">`;
+  return `<pre class="mwp-raw-html">${escapeHTML(raw)}</pre>`;
+};
 
 // Enhanced code block with terminal window dots, language banner, and copy button
 renderer.code = (token, maybeLang) => {

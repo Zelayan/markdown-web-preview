@@ -21,6 +21,16 @@ test('renders Chinese headings with stable duplicate-safe directory anchors', ()
   assert.equal(element.querySelectorAll('strong').length, 1);
 });
 
+test('table HTML line breaks and inline span anchors render without source boxes', () => {
+  const { element } = parse('| 编号 | 步骤 |\n|---|---|\n| <span id="case-rc-01">**RC-01**</span> | 第一项<br>第二项<BR />第三项 |');
+  assert.equal(element.querySelectorAll('td br').length, 2);
+  assert.equal(element.querySelector('#case-rc-01').textContent, 'RC-01');
+  assert.equal(element.querySelector('.mwp-raw-html'), null);
+  const unsafe = parse('safe <span id="bad" onclick="alert(1)">x</span><br onmouseover="alert(1)">');
+  assert.equal(unsafe.element.querySelector('[onclick],[onmouseover]'), null);
+  assert.equal(unsafe.element.querySelector('#bad'), null);
+});
+
 test('never executes raw HTML or event handlers', () => {
   const { html, element } = parse('# Hi\n<script>alert(1)</script>\n<img src=x onerror=alert(1)>\n[bad](javascript:alert(1))');
   assert.equal(element.querySelector('script'), null);
