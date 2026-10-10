@@ -12,6 +12,7 @@
 - [安装与启动](#安装与启动)
 - [平台支持](#平台支持)
 - [阅读设置](#阅读设置)
+- [Mermaid 图表](#mermaid-图表)
 - [PDF 导出](#pdf-导出)
 - [开发与构建](#开发与构建)
 - [安全与限制](#安全与限制)
@@ -28,6 +29,7 @@
 | 字号设置 | 12–22px，每次调整 0.5px；正文、标题、表格与代码按比例缩放 |
 | 主题与配色 | 浅色、深色、自动模式；六种强调色；代码块与主题联动 |
 | Markdown 渲染 | 表格、任务清单、GitHub 风格提示框、代码语言标签与复制按钮 |
+| Mermaid 图表 | 将 Mermaid 围栏渲染为 SVG 图片，支持主题切换、源码查看和 PDF 导出 |
 | 实时预览 | VS Code / Cursor 同步未保存内容；Harness 使用宿主资源监听 |
 | PDF 导出 | 独立 A4 打印排版，保留配色并移除阅读界面控件 |
 
@@ -91,6 +93,28 @@
 
 阅读偏好会保存。需要使用新版默认外观时，手动选择蓝色、浅色，并点击字号数值恢复默认即可。
 
+## Mermaid 图表
+
+使用 `mermaid` 语言标记的代码围栏即可渲染图表：
+
+````markdown
+```mermaid
+flowchart TD
+    A["配置中心下发"] --> B{"是否执行更新?"}
+    B -->|是| C["执行脚本"]
+    B -->|否| D["返回成功"]
+```
+````
+
+- Mermaid 11 随插件打包，无需外部 CDN；已实际验证流程图与时序图。
+- 图表跟随浅色/深色主题，浅色使用蓝灰色系。图表颜色暂不跟随六种强调色选择。
+- 渲染结果为隔离的 SVG 图片，可展开「查看 Mermaid 源码」并复制源码。
+- 修改文档后重新渲染；切换主题时重新生成图表。过期任务不会覆盖新文档。
+- 语法错误会显示提示并保留代码，不阻断正文或其他图表；建议给包含特殊字符的节点标签加双引号。
+- PDF 使用已完成的浅色图表，不打印折叠源码。图表尚未完成时暂时禁用导出。
+
+安全边界：使用 Mermaid strict 模式，不绑定点击交互，不支持 HTML 标签、外部图表图片、初始化指令或 YAML frontmatter 配置；源码最多 50,000 字符，最多 500 条边。复杂图表、数学公式及全部 Mermaid 图类型尚未逐一验证。
+
 ## PDF 导出
 
 ### 操作步骤
@@ -136,6 +160,7 @@ src/
   client.js              # Harness 入口
   preview.js             # 共用阅读组件
   render.js              # Markdown 解析与安全处理
+  mermaid.js             # 图表渲染队列与 SVG 安全处理
   styles.js              # 共用阅读样式
   resize.js              # 布局与阅读偏好
   vscode-webview.js       # VS Code / Cursor Webview 入口
@@ -156,10 +181,13 @@ test/                    # 自动化测试
 | `pnpm run build:harness` | 仅构建 Harness |
 | `pnpm run build:vscode` | 仅构建 VS Code / Cursor Webview |
 | `pnpm test` | 执行自动化测试 |
+| `pnpm run test:browser` | 验证真实 Chromium 中的图表、主题与 PDF |
 
 构建产物为 `lib/client.js` 和 `vscode/webview.js`。修改组件、渲染逻辑或样式后，应重新构建。
 
 在 VS Code 中打开项目根目录，按 F5 并选择 **调试 Markdown Web Preview (VS Code)**，可启动扩展开发宿主。更多说明见 [扩展开发指南](vscode/README.md)。
+
+浏览器验证需要 Playwright Chromium（可执行 `pnpm exec playwright install chromium` 安装），或通过 `MWP_CHROME_EXECUTABLE` 环境变量指定本机 Chrome 的可执行路径。验证脚本直接打开临时测试页面，不启动替代 Harness GUI 的服务器；截图和 PDF 写入系统临时目录。
 
 ### 打包 VSIX
 
@@ -191,9 +219,9 @@ VSIX 作为 GitHub Release 附件分发，不提交到源码仓库。当前打�
 
 ### 验证范围
 
-v0.3.12 包含 **19 项自动化测试**，覆盖 Harness 插件注册与交互、Markdown 渲染安全、VS Code API 消息通道、阅读偏好及打印版布局与配色。
+v0.4.0 包含 **28 项自动化测试**，覆盖 Harness 插件注册与交互、Markdown 渲染安全、VS Code API 消息通道、阅读偏好、Mermaid 图表转换与打印版布局及配色。
 
-VS Code 入口采用 API mock 测试。真实 VS Code / Cursor 版本兼容性、主题表现、本地图片和最终 PDF 分页效果，仍需实际环境验证。
+另外使用本机 Chrome 验证了打包后的 Webview：真实流程图与时序图、SVG 图片加载、错误容错、深色切换及含图表 PDF 输出。VS Code 扩展宿主 API 仍使用 mock 测试；实际 VS Code / Cursor 版本、本地图片、Harness 宿主 CSP 和复杂图表分页效果仍需各自环境验收。
 
 ## 常见问题
 
@@ -221,6 +249,7 @@ Harness 版不加载相对路径图片。VS Code / Cursor 版仅允许文档所�
 
 | 版本 | 主要变更 |
 | --- | --- |
+| [v0.4.0](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.4.0) | Mermaid SVG 图表、明暗主题、图表 PDF 导出、错误容错、生产压缩及浏览器验证；补齐 span 锚点写法 |
 | [v0.3.12](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.12) | 修复表格 `<br>` 换行与简单 `span` 锚点；专业化 README；HTML 白名单安全回归测试 |
 | [v0.3.11](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.11) | 字号调节；默认蓝色、浅色背景、14px；偏好回归测试 |
 | [v0.3.8](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.8) | 彩色 PDF 打印导出、打印代码块排版、主题与配色同步 |

@@ -1,0 +1,4 @@
+# Generated bundles contain upstream template literals (SVG paths, shaders,
+# messages). Preserve their literal whitespace rather than rewriting strings.
+lib/client.js linguist-generated=true whitespace=-blank-at-eol
+vscode/webview.js linguist-generated=true whitespace=-blank-at-eol

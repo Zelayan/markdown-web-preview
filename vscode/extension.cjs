@@ -25,7 +25,7 @@ function activate(context) {
     const nonce = crypto.randomBytes(18).toString('hex');
     const script = webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, 'webview.js'));
     // Only trusted extension styles are inline. Markdown styles/scripts are forbidden.
-    webview.html = `<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https: http:; style-src 'unsafe-inline'; script-src 'nonce-${nonce}';"><style>html,body,#root{height:100%;margin:0;overflow:hidden}body{padding:0}</style></head><body><div id="root"></div><script nonce="${nonce}" src="${script}"></script></body></html>`;
+    webview.html = `<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https: http: data:; style-src 'unsafe-inline'; script-src 'nonce-${nonce}';"><style>html,body,#root{height:100%;margin:0;overflow:hidden}body{padding:0}</style></head><body><div id="root"></div><script nonce="${nonce}" src="${script}"></script></body></html>`;
     let timer;
     let disposed = false;
     function update() {

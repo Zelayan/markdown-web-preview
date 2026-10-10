@@ -31,6 +31,29 @@ test('table HTML line breaks and inline span anchors render without source boxes
   assert.equal(unsafe.element.querySelector('#bad'), null);
 });
 
+test('UT table anchors accept standard quoted and unquoted ids', () => {
+  for (const attr of ['id="case-ut-08"', "id='case-ut-08'", 'id=case-ut-08', 'id = "case.ut:08"']) {
+    const { element } = parse(`| 编号 | 模块 |\n|---|---|\n| <span ${attr}>**UT-08**</span> | 第一项<br />第二项 |`);
+    assert.equal(element.querySelector('.mwp-raw-html'), null);
+    assert.equal(element.querySelector('td span strong').textContent, 'UT-08');
+    assert.equal(element.querySelectorAll('td br').length, 1);
+  }
+});
+
+test('safe HTML block tokens preserve spans and breaks but reject executable tags', () => {
+  const { element } = parse('<span id="block-anchor">first<br>second</span>\n\n');
+  assert.equal(element.querySelector('.mwp-raw-html'), null);
+  assert.equal(element.querySelector('#block-anchor').textContent, 'firstsecond');
+  const dangerous = parse('<span id="x"><script>alert(1)</script></span>');
+  assert.equal(dangerous.element.querySelector('script'), null);
+});
+
+test('fenced HTML stays literal rather than being rendered as anchors or breaks', () => {
+  const { element } = parse('```html\n<span id="example">sample</span><br>\n```');
+  assert.equal(element.querySelector('pre code').textContent, '<span id="example">sample</span><br>');
+  assert.equal(element.querySelector('#example'), null);
+});
+
 test('never executes raw HTML or event handlers', () => {
   const { html, element } = parse('# Hi\n<script>alert(1)</script>\n<img src=x onerror=alert(1)>\n[bad](javascript:alert(1))');
   assert.equal(element.querySelector('script'), null);

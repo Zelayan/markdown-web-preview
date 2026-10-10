@@ -15,8 +15,19 @@ renderer.html = (token) => {
   if (/^<br\s*\/?\s*>$/i.test(tag)) return '<br>';
   if (/^<\/span\s*>$/i.test(tag)) return '</span>';
   if (/^<span\s*>$/i.test(tag)) return '<span>';
-  const anchor = tag.match(/^<span\s+id\s*=\s*(["'])([\p{L}\p{N}_-]+)\1\s*>$/iu);
-  if (anchor) return `<span id="${escapeHTML(anchor[2])}">`;
+  const anchor = tag.match(/^<span\s+id\s*=\s*(?:"([^"\s<>]+)"|'([^'\s<>]+)'|([^\s"'`=<>]+))\s*>$/iu);
+  if (anchor) return `<span id="${escapeHTML(anchor[1] || anchor[2] || anchor[3])}">`;
+  // Marked can group adjacent safe tags and their content into one HTML token.
+  // Recursively validate each tag; never enable arbitrary HTML to fix layout.
+  const parts = raw.split(/(<[^>]*>)/g);
+  if (parts.length > 3) {
+    const tags = parts.filter((_, index) => index % 2);
+    const rendered = tags.map(value => renderer.html({ text: value }));
+    if (rendered.every(value => !value.startsWith('<pre class="mwp-raw-html">'))) {
+      let index = 0;
+      return parts.map((value, part) => part % 2 ? rendered[index++] : escapeHTML(value)).join('');
+    }
+  }
   return `<pre class="mwp-raw-html">${escapeHTML(raw)}</pre>`;
 };
 

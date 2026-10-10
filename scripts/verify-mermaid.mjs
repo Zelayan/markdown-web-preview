@@ -1,0 +1,45 @@
+import { chromium } from 'playwright';
+import { mkdtemp, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { createRequire } from 'node:module';
+import assert from 'node:assert/strict';
+const { createPrintHtml } = createRequire(import.meta.url)('../vscode/print-html.cjs');
+const browser = await chromium.launch({ headless: true, ...(process.env.MWP_CHROME_EXECUTABLE ? { executablePath: process.env.MWP_CHROME_EXECUTABLE } : {}) });
+const directory = await mkdtemp(join(tmpdir(), 'mwp-mermaid-qa-'));
+try {
+  const page = await browser.newPage({ viewport: { width: 1100, height: 900 } });
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  const bundle = pathToFileURL(resolve('vscode/webview.js')).href;
+  const input = '# Mermaid 验证\n\n```mermaid\nflowchart TD\n A["配置中心下发 sysconfig.bes"] --> B{"本节点是 ES 或 Worker?"}\n B -->|是| C["返回成功，不执行脚本"]\n B -->|否| D["编写 value"]\n```\n\n```mermaid\nsequenceDiagram\n participant A as 配置中心\n participant B as 节点\n A->>B: 下发配置\n B-->>A: 完成\n```\n\n```mermaid\nthis is invalid\n```';
+  const content = `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'nonce-test';"><style>html,body,#root{height:100%;margin:0}</style></head><body><div id="root"></div><script nonce="test">window.messages=[];window.acquireVsCodeApi=()=>({getState:()=>null,setState:()=>{},postMessage:m=>window.messages.push(m)});</script><script nonce="test" src="${bundle}"></script></body></html>`;
+  const entry = join(directory, 'index.html'); await writeFile(entry, content);
+  await page.goto(pathToFileURL(entry).href);
+  const update = dark => page.evaluate(({ text, dark }) => window.dispatchEvent(new MessageEvent('message', { data: { type: 'document', text, dark, resourceBase: 'https://webview.test/docs/' } })), { text: input, dark });
+  await update(false);
+  await page.waitForFunction(() => document.querySelectorAll('.mwp-mermaid-image').length === 2);
+  const images = page.locator('.mwp-mermaid-image');
+  await page.waitForFunction(() => [...document.querySelectorAll('.mwp-mermaid-image')].every(img => img.complete && img.naturalWidth > 0));
+  assert.equal(await page.locator('.mwp-mermaid-error').count(), 1);
+  assert.equal(await page.getByRole('button', { name: '导出 PDF' }).isEnabled(), true);
+  const lightSource = await images.first().getAttribute('src');
+  await page.screenshot({ path: join(directory, 'preview.png'), fullPage: true });
+  await page.getByRole('button', { name: '导出 PDF' }).click();
+  const exported = await page.evaluate(() => window.messages.find(m => m.type === 'exportPdf'));
+  assert.equal(exported.accent, '#2563eb');
+  assert.equal((exported.html.match(/mwp-mermaid-image/g) || []).length, 2);
+  // Manual theme switch must trigger actual dark SVG regeneration.
+  await page.getByTitle(/切换界面主题/).click();
+  await page.waitForFunction(previous => document.querySelector('.mwp-mermaid-image')?.getAttribute('src') !== previous, lightSource);
+  await page.waitForFunction(() => ![...document.querySelectorAll('button')].find(b => b.textContent === '导出 PDF')?.disabled);
+  const printPage = await browser.newPage();
+  await printPage.setContent(createPrintHtml(exported.html, 'Mermaid PDF QA', 'test', { accent: exported.accent }));
+  await printPage.waitForFunction(() => [...document.querySelectorAll('.mwp-mermaid-image')].every(img => img.complete && img.naturalWidth > 0));
+  await printPage.emulateMedia({ media: 'print' });
+  assert.equal(await printPage.locator('.mwp-mermaid-source').first().isVisible(), false);
+  await printPage.pdf({ path: join(directory, 'diagrams.pdf'), preferCSSPageSize: true, printBackground: true });
+  assert.deepEqual(errors, []);
+  console.log(`Browser verification passed: real flowchart, sequence, parse-error fallback, dark theme, PDF images.\nArtifacts: ${directory}`);
+} finally { await browser.close(); }

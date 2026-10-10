@@ -1,5 +1,6 @@
 import { renderMarkdown } from './render.js';
 import { styles } from './styles.js';
+import { renderMermaidHtml } from './mermaid.js';
 import { createPrintHtml } from '../vscode/print-html.cjs';
 import {
   clampTocWidth,
@@ -50,6 +51,35 @@ function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText, host
   const [active, setActive] = React.useState('');
   const [progress, setProgress] = React.useState(0);
   const [showBackToTop, setShowBackToTop] = React.useState(false);
+  const [systemDark, setSystemDark] = React.useState(() => window.matchMedia?.('(prefers-color-scheme: dark)').matches || false);
+  React.useEffect(() => {
+    const media = window.matchMedia?.('(prefers-color-scheme: dark)');
+    if (!media) return;
+    const update = () => setSystemDark(media.matches);
+    media.addEventListener?.('change', update);
+    return () => media.removeEventListener?.('change', update);
+  }, []);
+  const diagramDark = (theme === 'auto' ? hostTheme || (systemDark ? 'dark' : 'light') : theme) === 'dark';
+  const hasMermaid = /data-lang="mermaid"/i.test(html);
+  const [diagrams, setDiagrams] = React.useState(null);
+  const diagramsReady = !hasMermaid || (diagrams?.source === html && diagrams?.dark === diagramDark);
+  const displayHtml = hasMermaid && diagramsReady ? diagrams.view : html;
+  const printHtml = hasMermaid && diagramsReady ? diagrams.print : html;
+  React.useEffect(() => {
+    if (!hasMermaid) return;
+    let stopped = false;
+    const options = { dark: diagramDark, cancelled: () => stopped };
+    void (async () => {
+      const view = await renderMermaidHtml(html, options);
+      if (stopped || view === null) return;
+      // Paper always uses light diagram colors, even when reading in dark mode.
+      const print = diagramDark ? await renderMermaidHtml(html, { ...options, dark: false }) : view;
+      if (!stopped && print !== null) setDiagrams({ source: html, dark: diagramDark, view, print });
+    })().catch(() => {
+      if (!stopped) setDiagrams({ source: html, dark: diagramDark, view: html, print: html });
+    });
+    return () => { stopped = true; };
+  }, [html, hasMermaid, diagramDark]);
 
   const layoutRef = React.useRef(null);
   const scrollElement = React.useRef(null);
@@ -283,15 +313,15 @@ function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText, host
         ),
         h('button', {
           type: 'button', className: 'mwp-tool-btn', title: '打开打印版，在打印窗口保存为 PDF',
-          disabled: content?.kind === 'text' && !content.eof,
+          disabled: !diagramsReady || (content?.kind === 'text' && !content.eof),
           onClick: () => {
             const printOptions = { accent: (ACCENT_COLORS.find(color => color.id === accentColor) || ACCENT_COLORS[0]).hex };
-            if (exportPdf) { exportPdf(html, printOptions); return; }
+            if (exportPdf) { exportPdf(printHtml, printOptions); return; }
             const printWindow = window.open('', '_blank');
             if (!printWindow) { window.alert('请允许弹出窗口后重试导出 PDF。'); return; }
             printWindow.opener = null;
             printWindow.document.open();
-            printWindow.document.write(createPrintHtml(html, headings[0]?.title || 'Markdown', 'markdown-print', printOptions));
+            printWindow.document.write(createPrintHtml(printHtml, headings[0]?.title || 'Markdown', 'markdown-print', printOptions));
             printWindow.document.close();
           },
         }, '导出 PDF'),
@@ -392,7 +422,7 @@ function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText, host
       // Obsidian Note Viewport
       h('div', { className: 'mwp-scroller', ref: setScroller, onClick: handleProseClick },
         h('article', { className: `mwp-article${isWide ? ' is-wide' : ''}` },
-          h('div', { className: 'mwp-prose', style: { zoom: fontSize / 13.5 }, dangerouslySetInnerHTML: { __html: html } }),
+          h('div', { className: 'mwp-prose', style: { zoom: fontSize / 13.5 }, dangerouslySetInnerHTML: { __html: displayHtml } }),
           content?.kind === 'text' && !content.eof && h('div', { className: 'mwp-page-note', role: 'status' }, '文档正在分页加载 · 滚动到底部可读取后续内容')
         ),
         // Floating Back-to-Top Button

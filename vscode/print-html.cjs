@@ -2,8 +2,12 @@ function createPrintHtml(html, title = 'Markdown', nonce = 'markdown-print', opt
   // Use the light palette for paper, validating before interpolating into CSS.
   const accent = typeof options.accent === 'string' && /^#[0-9a-f]{6}$/i.test(options.accent) ? options.accent : '#7c3aed';
   const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>${escape(title)}</title><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https: http: file:; style-src 'unsafe-inline'; script-src 'nonce-${escape(nonce)}';"><style>
+  return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>${escape(title)}</title><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https: http: file: data:; style-src 'unsafe-inline'; script-src 'nonce-${escape(nonce)}';"><style>
   @page { size: A4; margin: 18mm 16mm; }
+  .mwp-mermaid { margin: 12px 0; padding: 8px; border: 1px solid #dbe1e8; break-inside: avoid; }
+  .mwp-mermaid-image { display: block; width: 100%; height: auto; max-height: 245mm; object-fit: contain; }
+  .mwp-mermaid-source { display: none; }
+  .mwp-mermaid-error { color: #92400e; padding: 8px; border-left: 3px solid #d97706; }
   html { --mwp-print-accent: ${accent}; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   li::marker { color: var(--mwp-print-accent); }
   *, *::before, *::after { -webkit-print-color-adjust: exact; print-color-adjust: exact; }

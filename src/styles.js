@@ -1,4 +1,11 @@
 export const styles = `
+/* Diagram cards use the same restrained document palette as the prose. */
+.mwp-mermaid { margin: 10px 0; padding: 12px; border: 1px solid var(--mwp-border); border-radius: 6px; background: var(--mwp-surface); overflow-x: auto; }
+.mwp-prose .mwp-mermaid-image { display: block; width: auto; max-width: 100%; height: auto; max-height: 640px; object-fit: contain; margin: 0 auto; border: 0; box-shadow: none; }
+.mwp-mermaid-source { margin-top: 8px; font-size: 11px; color: var(--mwp-ink-secondary); }
+.mwp-mermaid-source summary { cursor: pointer; padding: 4px 0; }
+.mwp-mermaid-error { padding: 8px 10px; margin-top: 8px; border-left: 3px solid #d97706; background: var(--mwp-accent-light); color: var(--mwp-ink); white-space: pre-wrap; font-size: 12px; }
+
 /* ==========================================================================
    Markdown Web Preview - Obsidian Reading Experience
    Features: Color Themes · Compact Typography · Modern Developer Code Blocks
