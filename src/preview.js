@@ -1,3 +1,4 @@
+import { installTableResize } from './table-resize.js';
 import { renderMarkdown } from './render.js';
 import { styles } from './styles.js';
 import { renderMermaidHtml } from './mermaid.js';
@@ -81,6 +82,9 @@ function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText, host
     return () => { stopped = true; };
   }, [html, hasMermaid, diagramDark]);
 
+  const proseRef = React.useRef(null);
+  const tableWidths = React.useRef(new Map());
+  React.useEffect(() => installTableResize(proseRef.current, tableWidths.current), [displayHtml]);
   const layoutRef = React.useRef(null);
   const scrollElement = React.useRef(null);
   const navItemsRef = React.useRef(null);
@@ -422,7 +426,7 @@ function MarkdownWebBody({ content, scrollportRef, renderOptions, copyText, host
       // Obsidian Note Viewport
       h('div', { className: 'mwp-scroller', ref: setScroller, onClick: handleProseClick },
         h('article', { className: `mwp-article${isWide ? ' is-wide' : ''}` },
-          h('div', { className: 'mwp-prose', style: { zoom: fontSize / 13.5 }, dangerouslySetInnerHTML: { __html: displayHtml } }),
+          h('div', { className: 'mwp-prose', ref: proseRef, style: { zoom: fontSize / 13.5 }, dangerouslySetInnerHTML: { __html: displayHtml } }),
           content?.kind === 'text' && !content.eof && h('div', { className: 'mwp-page-note', role: 'status' }, '文档正在分页加载 · 滚动到底部可读取后续内容')
         ),
         // Floating Back-to-Top Button

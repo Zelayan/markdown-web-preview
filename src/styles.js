@@ -1,4 +1,10 @@
 export const styles = `
+.mwp-table-resize { position: absolute; z-index: 2; top: 0; bottom: 0; right: -1px; width: 7px; padding: 0; border: 0; border-radius: 0; background: transparent; cursor: col-resize; touch-action: none; }
+.mwp-table-resize:hover, .mwp-table-resize:focus-visible { background: var(--mwp-accent-light); outline: 1px solid var(--mwp-accent); }
+.mwp-table-wrap th:last-child > .mwp-table-resize:not(.is-table-edge) { right: 10px; }
+.mwp-table-resize.is-table-edge { right: 0; width: 5px; background: var(--mwp-accent); opacity: 0.25; }
+.mwp-table-wrap table[style*="fixed"] th, .mwp-table-wrap table[style*="fixed"] td { overflow-wrap: anywhere; min-width: 0; }
+
 /* Diagram cards use the same restrained document palette as the prose. */
 .mwp-mermaid { margin: 10px 0; padding: 12px; border: 1px solid var(--mwp-border); border-radius: 6px; background: var(--mwp-surface); overflow-x: auto; }
 .mwp-prose .mwp-mermaid-image { display: block; width: auto; max-width: 100%; height: auto; max-height: 640px; object-fit: contain; margin: 0 auto; border: 0; box-shadow: none; }

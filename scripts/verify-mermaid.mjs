@@ -40,6 +40,19 @@ try {
   await printPage.emulateMedia({ media: 'print' });
   assert.equal(await printPage.locator('.mwp-mermaid-source').first().isVisible(), false);
   await printPage.pdf({ path: join(directory, 'diagrams.pdf'), preferCSSPageSize: true, printBackground: true });
+  const tableInput = '# 表格验证\n\n| 名称 | 内容 |\n|---|---|\n| A | 较长的测试内容 |';
+  await page.evaluate(text => window.dispatchEvent(new MessageEvent('message', { data: { type: 'document', text, dark: false, resourceBase: 'https://webview.test/docs/' } })), tableInput);
+  const table = page.locator('.mwp-prose table');
+  await page.getByRole('button', { name: '调整第 1 列宽度', exact: true }).waitFor();
+  const original = await table.evaluate(el => el.getBoundingClientRect().width);
+  await page.getByRole('button', { name: '调整第 1 列宽度', exact: true }).press('ArrowRight');
+  assert.ok(await table.evaluate(el => el.getBoundingClientRect().width) > original);
+  const columnAdjusted = await table.evaluate(el => el.getBoundingClientRect().width);
+  await page.getByRole('button', { name: '调整表格宽度', exact: true }).press('ArrowRight');
+  assert.ok(await table.evaluate(el => el.getBoundingClientRect().width) > columnAdjusted);
+  await page.getByRole('button', { name: '导出 PDF' }).click();
+  const lastExport = await page.evaluate(() => window.messages.filter(m => m.type === 'exportPdf').at(-1));
+  assert.ok(!lastExport.html.includes('mwp-table-resize'));
   assert.deepEqual(errors, []);
-  console.log(`Browser verification passed: real flowchart, sequence, parse-error fallback, dark theme, PDF images.\nArtifacts: ${directory}`);
+  console.log(`Browser verification passed: real flowchart, sequence, parse-error fallback, dark theme, PDF images, table widths.\nArtifacts: ${directory}`);
 } finally { await browser.close(); }

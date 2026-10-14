@@ -6,7 +6,25 @@
 
 **[下载最新版本](https://github.com/Zelayan/markdown-web-preview/releases/latest)** · **[版本记录](https://github.com/Zelayan/markdown-web-preview/releases)** · **[反馈问题](https://github.com/Zelayan/markdown-web-preview/issues)**
 
+## 界面预览
+
+### 文档阅读
+
+大纲导航、默认蓝色配色、14px 字号、代码复制、提示框及表格阅读视图。
+
+![文档阅读预览：左侧大纲、工具栏、代码块与表格](docs/screenshots/reading-preview.png)
+
+### Mermaid 图表
+
+流程图与时序图直接嵌入正文，下方可展开查看 Mermaid 源码。
+
+![Mermaid 预览：流程图与时序图](docs/screenshots/mermaid-preview.png)
+
+> 截图来自当前构建的共用 Webview 在 Chrome 中的真实渲染，使用虚构演示文档；不包含 VS Code / Cursor 外层窗口。截图可通过 `scripts/capture-screenshots.mjs` 重新生成，浏览器配置与 `test:browser` 相同。
+
 ## 目录
+
+- [界面预览](#界面预览)
 
 - [主要功能](#主要功能)
 - [安装与启动](#安装与启动)
@@ -29,6 +47,7 @@
 | 字号设置 | 12–22px，每次调整 0.5px；正文、标题、表格与代码按比例缩放 |
 | 主题与配色 | 浅色、深色、自动模式；六种强调色；代码块与主题联动 |
 | Markdown 渲染 | 表格、任务清单、GitHub 风格提示框、代码语言标签与复制按钮 |
+| 表格宽度 | 表头列边界调整列宽，最右侧蓝色边缘按比例调整整表；双击恢复自动宽度；仅当前预览会话记忆，不修改 Markdown，PDF 使用独立自动排版 |
 | Mermaid 图表 | 将 Mermaid 围栏渲染为 SVG 图片，支持主题切换、源码查看和 PDF 导出 |
 | 实时预览 | VS Code / Cursor 同步未保存内容；Harness 使用宿主资源监听 |
 | PDF 导出 | 独立 A4 打印排版，保留配色并移除阅读界面控件 |
@@ -219,7 +238,7 @@ VSIX 作为 GitHub Release 附件分发，不提交到源码仓库。当前打�
 
 ### 验证范围
 
-v0.4.0 包含 **28 项自动化测试**，覆盖 Harness 插件注册与交互、Markdown 渲染安全、VS Code API 消息通道、阅读偏好、Mermaid 图表转换与打印版布局及配色。
+v0.4.2 包含 **29 项自动化测试**，覆盖 Harness 插件注册与交互、Markdown 渲染安全、VS Code API 消息通道、阅读偏好、Mermaid 图表转换与打印版布局及配色。
 
 另外使用本机 Chrome 验证了打包后的 Webview：真实流程图与时序图、SVG 图片加载、错误容错、深色切换及含图表 PDF 输出。VS Code 扩展宿主 API 仍使用 mock 测试；实际 VS Code / Cursor 版本、本地图片、Harness 宿主 CSP 和复杂图表分页效果仍需各自环境验收。
 
@@ -249,6 +268,7 @@ Harness 版不加载相对路径图片。VS Code / Cursor 版仅允许文档所�
 
 | 版本 | 主要变更 |
 | --- | --- |
+| [v0.4.2](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.4.2) | 列宽与整表宽度拖拽、键盘微调、双击重置；README 真实界面截图及可重现截图脚本 |
 | [v0.4.1](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.4.1) | 预览默认在当前编辑器组的新标签中打开，不再自动分栏；复用已有面板并定位到当前组 |
 | [v0.4.0](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.4.0) | Mermaid SVG 图表、明暗主题、图表 PDF 导出、错误容错、生产压缩及浏览器验证；补齐 span 锚点写法 |
 | [v0.3.12](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.12) | 修复表格 `<br>` 换行与简单 `span` 锚点；专业化 README；HTML 白名单安全回归测试 |

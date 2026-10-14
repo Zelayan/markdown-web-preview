@@ -1,0 +1,37 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { JSDOM } from 'jsdom';
+import { installTableResize } from '../src/table-resize.js';
+
+test('table columns and total width resize independently and reset safely', () => {
+  const dom = new JSDOM('<div id="root"><div class="mwp-table-wrap"><table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>a</td><td>b</td></tr></tbody></table></div></div>');
+  const { document } = dom.window;
+  const root = document.querySelector('#root'); const table = root.querySelector('table');
+  Object.defineProperty(table, 'offsetWidth', { get: () => 200 });
+  table.getBoundingClientRect = () => ({ width: 200 });
+  for (const cell of table.rows[0].cells) cell.getBoundingClientRect = () => ({ width: 100 });
+  const saved = new Map(); const cleanup = installTableResize(root, saved);
+  const handles = root.querySelectorAll('.mwp-table-resize');
+  assert.equal(handles.length, 3);
+  const key = (el, value) => el.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: value, bubbles: true }));
+  key(handles[0], 'ArrowRight');
+  assert.equal(table.style.width, '208px');
+  assert.equal(table.querySelectorAll('col')[0].style.width, '108px');
+  assert.equal(table.querySelectorAll('col')[1].style.width, '100px');
+  key(handles[1], 'ArrowRight'); assert.equal(table.style.width, '216px');
+  key(handles[2], 'ArrowRight'); assert.equal(table.style.width, '224px');
+  const down = new dom.window.Event('pointerdown', { bubbles: true, cancelable: true });
+  Object.assign(down, { button: 0, clientX: 100, pointerId: 1 }); handles[0].dispatchEvent(down);
+  assert.equal(document.body.style.cursor, 'col-resize');
+  const move = new dom.window.Event('pointermove'); Object.assign(move, { clientX: 140, pointerId: 1 }); dom.window.dispatchEvent(move);
+  assert.equal(table.style.width, '264px');
+  dom.window.dispatchEvent(new dom.window.Event('pointerup'));
+  assert.equal(document.body.style.cursor, '');
+  handles[0].dispatchEvent(new dom.window.Event('dblclick'));
+  assert.equal(table.style.width, ''); assert.equal(saved.size, 0);
+  key(handles[0], 'ArrowRight'); cleanup();
+  assert.equal(root.querySelectorAll('.mwp-table-resize,colgroup').length, 0);
+  const next = installTableResize(root, saved);
+  assert.equal(table.style.width, '208px');
+  next();
+});
