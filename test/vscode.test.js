@@ -18,18 +18,18 @@ test('VS Code command opens a protected panel, updates drafts and copies code', 
     postMessage: async msg => { sent.push(msg); return true; },
   };
   let created = 0; let copied;
-  const panel = { webview, reveal() {}, dispose() {},
+  const panel = { webview, reveal(column) { assert.equal(column, -1); }, dispose() {},
     onDidDispose: cb => { handlers.dispose = cb; return disposable(); },
     onDidChangeViewState: () => disposable() };
   const vscode = {
     Uri: { joinPath: (base, ...parts) => ({ path: base.path + '/' + parts.join('/') }) },
-    ViewColumn: { Beside: 2 }, ColorThemeKind: { Dark: 2, HighContrast: 3 },
+    ViewColumn: { Active: -1, Beside: 2 }, ColorThemeKind: { Dark: 2, HighContrast: 3 },
     commands: { registerCommand: (id, cb) => { handlers.command = cb; return disposable(); } },
     env: { clipboard: { writeText: async value => { copied = value; } } },
     window: { activeTextEditor: { document: doc }, activeColorTheme: { kind: 2 },
       showInformationMessage() {}, onDidChangeActiveColorTheme: () => disposable(),
       createWebviewPanel: (type, title, column, options) => {
-        created++; assert.equal(column, 2); assert.equal(options.enableScripts, true);
+        created++; assert.equal(column, -1); assert.equal(options.enableScripts, true);
         assert.equal(options.localResourceRoots.length, 2); return panel;
       } },
     workspace: { textDocuments: [doc], openTextDocument: async () => doc,

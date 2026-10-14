@@ -15,10 +15,10 @@ function activate(context) {
       return vscode.window.showInformationMessage('请选择 Markdown 文件。');
     }
     const key = uri.toString();
-    if (panels.has(key)) { panels.get(key).reveal(vscode.ViewColumn.Beside); return; }
+    if (panels.has(key)) { panels.get(key).reveal(vscode.ViewColumn.Active); return; }
     const directory = vscode.Uri.joinPath(uri, '..');
     const panel = vscode.window.createWebviewPanel('markdownWebPreview', `预览 · ${path.basename(uri.path)}`,
-      vscode.ViewColumn.Beside, { enableScripts: true, retainContextWhenHidden: true,
+      vscode.ViewColumn.Active, { enableScripts: true, retainContextWhenHidden: true,
         localResourceRoots: [context.extensionUri, directory] });
     panels.set(key, panel);
     const webview = panel.webview;

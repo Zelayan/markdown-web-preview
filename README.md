@@ -51,7 +51,7 @@
 - Markdown 编辑器右上角的预览按钮。
 - 文件树中的 Markdown 文件右键菜单。
 
-预览在侧边打开，并绑定到对应文件；再次打开同一文件会复用已有面板。当前通过 GitHub 分发安装包，**未发布到 VS Code Marketplace**。
+预览默认在当前编辑器组的新标签中打开，不自动分栏，原 Markdown 标签仍保留。预览绑定到对应文件；再次打开同一文件会复用已有面板并显示到当前组。需要并排查看时，可自行拖动预览标签到其他编辑器组。当前通过 GitHub 分发安装包，**未发布到 VS Code Marketplace**。
 
 更新时安装新版 VSIX 即可。如果界面仍为旧版，执行 **Developer: Reload Window**，然后重新打开增强预览。
 
@@ -249,6 +249,7 @@ Harness 版不加载相对路径图片。VS Code / Cursor 版仅允许文档所�
 
 | 版本 | 主要变更 |
 | --- | --- |
+| [v0.4.1](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.4.1) | 预览默认在当前编辑器组的新标签中打开，不再自动分栏；复用已有面板并定位到当前组 |
 | [v0.4.0](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.4.0) | Mermaid SVG 图表、明暗主题、图表 PDF 导出、错误容错、生产压缩及浏览器验证；补齐 span 锚点写法 |
 | [v0.3.12](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.12) | 修复表格 `<br>` 换行与简单 `span` 锚点；专业化 README；HTML 白名单安全回归测试 |
 | [v0.3.11](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.3.11) | 字号调节；默认蓝色、浅色背景、14px；偏好回归测试 |
