@@ -919,10 +919,19 @@ export const styles = `
 }
 .mwp-callout-caution .mwp-callout-title { color: #dc2626; }
 
+/* Obsidian-inspired reading divider: neutral, quiet, and content-width. */
 .mwp-prose hr {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 0;
+  padding: 0;
   border: 0;
   border-top: 1px solid var(--mwp-border);
-  margin: 16px 0;
+  margin: 24px 0;
+  background: none;
+  box-shadow: none;
+  opacity: 1;
 }
 
 .mwp-prose img {

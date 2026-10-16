@@ -38,7 +38,15 @@ Mermaid 11 已打包，无需外部 CDN。使用 strict 模式，不执行点击
 
 ## 打包安装
 
-在本目录执行：
+可在仓库根目录执行一键离线打包：
+
+```sh
+pnpm run package:offline
+```
+
+产物直接输出在根目录 `dist/markdown-web-preview-<版本>.vsix` 及本目录。
+
+也可以在本目录使用 `@vscode/vsce` 打包：
 
 ```sh
 pnpm dlx @vscode/vsce package --allow-missing-repository --skip-license --no-dependencies

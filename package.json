@@ -1,6 +1,6 @@
 {
   "name": "@local/markdown-web-preview",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "private": true,
   "type": "module",
   "description": "Markdown web preview for DeepSeek Harness document tabs",
@@ -33,19 +33,21 @@
     "build": "node scripts/build.mjs",
     "build:harness": "node scripts/build.mjs harness",
     "build:vscode": "node scripts/build.mjs vscode",
+    "package": "node scripts/package-offline.mjs",
+    "package:offline": "node scripts/package-offline.mjs",
+    "install:offline": "node scripts/install-offline.mjs",
     "test": "node --test test/*.test.js",
     "test:browser": "node scripts/verify-mermaid.mjs"
   },
   "devDependencies": {
+    "dompurify": "^3.2.0",
     "esbuild": "^0.25.0",
     "jsdom": "^30.1.1",
+    "marked": "^15.0.0",
+    "mermaid": "^11.17.2",
     "playwright": "^1.64.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
-  "dependencies": {
-    "dompurify": "^3.2.0",
-    "marked": "^15.0.0",
-    "mermaid": "^11.17.2"
-  }
+  "dependencies": {}
 }

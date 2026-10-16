@@ -76,11 +76,39 @@
 
 ### DeepSeek Harness
 
-1. 克隆本仓库，或准备包含构建产物的项目目录。
-2. 在 Harness 的插件页选择安装**本地组合包**，填写项目目录的绝对路径。
-3. 打开 `.md` 或 `.markdown` 文件，在右侧预览的查看器选项中选择 **网页阅读**。
+支持在线与离线环境安装。所有依赖已预先打包至单文件组件中，运行时**不发起任何外部网络请求**。
 
-原有 Markdown 和纯文本查看方式仍保留。安装器若要求授权依赖构建脚本，请核对包名后再确认。
+#### 方式一：通过 Harness 插件界面安装离线包（推荐）
+
+1. 从 [GitHub Releases](https://github.com/Zelayan/markdown-web-preview/releases/latest) 下载 `local-markdown-web-preview-<版本>.tgz` 安装包。
+2. 打开 Harness 侧边栏的 **插件** 页面，点击 **添加插件**。
+3. 在包名/路径输入框中填写下载的 `.tgz` 文件的**本机绝对路径**（例如 `/Users/yourname/Downloads/local-markdown-web-preview-0.4.2.tgz`）。
+4. 点击 **安装**，完成后选择 **立即启用**。
+5. 打开 `.md` 或 `.markdown` 文件，在右侧文档预览下拉框中选择 **网页阅读**。
+
+#### 方式二：使用零依赖离线安装器（纯 Node 环境 / 机器完全断网）
+
+适合无法运行 `pnpm` 或没有公网访问权限的离线机器：
+
+1. 从 Releases 下载解压离线包目录 `markdown-web-preview-<版本>-offline`（包含 `package/`、`manifest.json` 与 `install.cjs`）。
+2. **完全退出目标 DeepSeek Harness** 及其后台进程。
+3. 运行专用安装器：
+   ```bash
+   # macOS / Linux
+   node install.cjs --profile ~/.dsh/profiles/desktop --host-stopped
+
+   # Windows
+   node install.cjs --profile "$env:USERPROFILE\.dsh\profiles\desktop" --host-stopped
+   ```
+   > 若需要更新已安装的版本，可追加 `--force` 参数。
+4. 安装器会自动校验 SHA-256 完整性清单，安全备份 profile 配置，将插件写入本地 `offline-packages` 并完成登记。
+5. 重启 DeepSeek Harness 即可直接使用。
+
+#### 方式三：本地项目目录安装
+
+1. 克隆本仓库并完成构建（产物位于 `lib/client.js`）。
+2. 在 Harness 插件页选择添加插件，输入项目根目录的绝对路径。
+3. 安装并启用。
 
 > 插件安装影响当前 profile 下的会话。仅修改工作区代码不会自动更新已安装插件；更新后可能需要刷新 GUI 或重启 Harness。
 
@@ -196,21 +224,30 @@ test/                    # 自动化测试
 
 | 命令 | 用途 |
 | --- | --- |
-| `pnpm run build` | 构建两个平台 |
-| `pnpm run build:harness` | 仅构建 Harness |
+| `pnpm run build` | 构建两个平台（`lib/client.js` 与 `vscode/webview.js`） |
+| `pnpm run build:harness` | 仅构建 Harness 客户端脚本 |
 | `pnpm run build:vscode` | 仅构建 VS Code / Cursor Webview |
-| `pnpm test` | 执行自动化测试 |
+| `pnpm run package:offline` | **一键打包所有离线分发物**（Harness 目录 + `.tgz`、VS Code `.vsix` 及校验清单） |
+| `pnpm test` | 执行全套自动化单元与集成测试（含离线安装与安全校验） |
 | `pnpm run test:browser` | 验证真实 Chromium 中的图表、主题与 PDF |
 
-构建产物为 `lib/client.js` 和 `vscode/webview.js`。修改组件、渲染逻辑或样式后，应重新构建。
+构建产物为 `lib/client.js` 和 `vscode/webview.js`。修改组件、渲染逻辑或样式后，应重新构建。离线安装分发文件生成至 `dist/` 目录。
 
-在 VS Code 中打开项目根目录，按 F5 并选择 **调试 Markdown Web Preview (VS Code)**，可启动扩展开发宿主。更多说明见 [扩展开发指南](vscode/README.md)。
+### 制作离线分发包
 
-浏览器验证需要 Playwright Chromium（可执行 `pnpm exec playwright install chromium` 安装），或通过 `MWP_CHROME_EXECUTABLE` 环境变量指定本机 Chrome 的可执行路径。验证脚本直接打开临时测试页面，不启动替代 Harness GUI 的服务器；截图和 PDF 写入系统临时目录。
+联网环境下执行：
 
-### 打包 VSIX
+```sh
+pnpm run package:offline
+```
 
-先在项目根目录完成构建，再执行：
+脚本将在 `dist/` 目录下生成：
+1. `markdown-web-preview-<版本>-offline/`：含 `package/`、`manifest.json` 与单文件零依赖安装器 `install.cjs`，可直接复制到完全断网的机器上运行。
+2. `local-markdown-web-preview-<版本>.tgz`：适用于 Harness 插件页面直接输入路径安装。
+3. `markdown-web-preview-<版本>.vsix`：适用于 VS Code / Cursor 离线扩展安装。
+4. `SHA256SUMS.txt`：各分发产物的 SHA-256 校验码清单。
+
+也可以使用标准的 VSIX 打包工具：
 
 ```sh
 cd vscode
@@ -238,7 +275,7 @@ VSIX 作为 GitHub Release 附件分发，不提交到源码仓库。当前打�
 
 ### 验证范围
 
-v0.4.2 包含 **29 项自动化测试**，覆盖 Harness 插件注册与交互、Markdown 渲染安全、VS Code API 消息通道、阅读偏好、Mermaid 图表转换与打印版布局及配色。
+v0.4.3 包含 **38 项自动化测试**，覆盖 Harness 插件注册与交互、Markdown 渲染安全、VS Code API 消息通道、阅读偏好、Mermaid 图表转换、打印版排版、Obsidian 风格分割线、以及离线包文件摘要与自包含安全安装校验。
 
 另外使用本机 Chrome 验证了打包后的 Webview：真实流程图与时序图、SVG 图片加载、错误容错、深色切换及含图表 PDF 输出。VS Code 扩展宿主 API 仍使用 mock 测试；实际 VS Code / Cursor 版本、本地图片、Harness 宿主 CSP 和复杂图表分页效果仍需各自环境验收。
 
@@ -268,6 +305,7 @@ Harness 版不加载相对路径图片。VS Code / Cursor 版仅允许文档所�
 
 | 版本 | 主要变更 |
 | --- | --- |
+| [v0.4.3](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.4.3) | 新增自包含离线安装支持（Harness 本地 .tgz 与零依赖 node install.cjs 安装器）、一键离线打包；Obsidian 风格沉浸式分割线排版优化；自动化测试增至 38 项 |
 | [v0.4.2](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.4.2) | 列宽与整表宽度拖拽、键盘微调、双击重置；README 真实界面截图及可重现截图脚本 |
 | [v0.4.1](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.4.1) | 预览默认在当前编辑器组的新标签中打开，不再自动分栏；复用已有面板并定位到当前组 |
 | [v0.4.0](https://github.com/Zelayan/markdown-web-preview/releases/tag/v0.4.0) | Mermaid SVG 图表、明暗主题、图表 PDF 导出、错误容错、生产压缩及浏览器验证；补齐 span 锚点写法 |

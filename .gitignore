@@ -1,4 +1,5 @@
 node_modules/
+dist/
 *.tgz
 *.vsix
 .DS_Store
