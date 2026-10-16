@@ -1,11 +1,11 @@
 import { createMarkdownPreview } from './preview.js';
 
 window.__ModuleLoader__.load({
-  id: '@local/markdown-web-preview',
+  id: '@zelayan/markdown-web-preview',
   factory(require) {
     const React = require('react');
     const h = React.createElement;
-    const ID = '@local/markdown-web-preview/web';
+    const ID = '@zelayan/markdown-web-preview/web';
     const MarkdownWebBody = createMarkdownPreview(React);
 
     return {

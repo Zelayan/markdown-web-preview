@@ -9,7 +9,7 @@ test('built plugin registers a callable title and matching document slot', () =>
   vm.runInNewContext(source, {
     window: { __ModuleLoader__: { load(value) { plugin = value; } } },
   });
-  assert.equal(plugin.id, '@local/markdown-web-preview');
+  assert.equal(plugin.id, '@zelayan/markdown-web-preview');
   const module = plugin.factory(name => {
     assert.equal(name, 'react');
     return { createElement() {} };

@@ -20,7 +20,7 @@ import {
 import { dirname, join, resolve } from 'node:path';
 
 /** Expected package name */
-export const PLUGIN_NAME = '@local/markdown-web-preview';
+export const PLUGIN_NAME = '@zelayan/markdown-web-preview';
 
 /**
  * Validates whether an unknown value is a plain non-null object.
@@ -231,7 +231,7 @@ export async function installOfflinePlugin({
   const id = randomUUID();
   const nodeModules = join(profile, 'node_modules');
   const sources = join(profile, 'offline-packages');
-  // Handle scoped package name e.g. @local/markdown-web-preview
+  // Handle scoped package name e.g. @zelayan/markdown-web-preview
   const target = join(nodeModules, manifest.name);
   const safePkgFolder = manifest.name.replace(/[^a-zA-Z0-9._-]/g, '_');
   const sourceFolderName = `${safePkgFolder}-${manifest.version}-${id}`;

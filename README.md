@@ -76,21 +76,29 @@
 
 ### DeepSeek Harness
 
-支持在线与离线环境安装。所有依赖已预先打包至单文件组件中，运行时**不发起任何外部网络请求**。
+支持在线 npm 安装与离线环境安装。所有依赖已预先打包至单文件组件中，运行时**不发起任何外部网络请求**。
 
-#### 方式一：通过 Harness 插件界面安装离线包（推荐）
+#### 方式一：在线安装（推荐）
 
-1. 从 [GitHub Releases](https://github.com/Zelayan/markdown-web-preview/releases/latest) 下载 `local-markdown-web-preview-<版本>.tgz` 安装包。
+- **通过 Web 界面**：打开 Harness 侧边栏的 **插件** 页面，点击 **添加插件**，输入 `@zelayan/markdown-web-preview` 并点击 **安装**，完成后选择 **立即启用**。
+- **通过命令行**：
+  ```sh
+  dsh plugin add @zelayan/markdown-web-preview
+  ```
+
+#### 方式二：通过 Harness 插件界面安装离线包
+
+1. 从 [GitHub Releases](https://github.com/Zelayan/markdown-web-preview/releases/latest) 下载 `zelayan-markdown-web-preview-<版本>.tgz` 安装包。
 2. 打开 Harness 侧边栏的 **插件** 页面，点击 **添加插件**。
-3. 在包名/路径输入框中填写下载的 `.tgz` 文件的**本机绝对路径**（例如 `/Users/yourname/Downloads/local-markdown-web-preview-0.4.2.tgz`）。
+3. 在包名/路径输入框中填写下载的 `.tgz` 文件的**本机绝对路径**（例如 `/Users/yourname/Downloads/zelayan-markdown-web-preview-0.4.3.tgz`）。
 4. 点击 **安装**，完成后选择 **立即启用**。
 5. 打开 `.md` 或 `.markdown` 文件，在右侧文档预览下拉框中选择 **网页阅读**。
 
-#### 方式二：使用零依赖离线安装器（纯 Node 环境 / 机器完全断网）
+#### 方式三：使用零依赖离线安装器（纯 Node 环境 / 机器完全断网）
 
 适合无法运行 `pnpm` 或没有公网访问权限的离线机器：
 
-1. 从 Releases 下载解压离线包目录 `markdown-web-preview-<版本>-offline`（包含 `package/`、`manifest.json` 与 `install.cjs`）。
+1. 从 Releases 下载解压离线包 `markdown-web-preview-<版本>-offline.zip`（包含 `package/`、`manifest.json` 与 `install.cjs`）。
 2. **完全退出目标 DeepSeek Harness** 及其后台进程。
 3. 运行专用安装器：
    ```bash
@@ -104,7 +112,7 @@
 4. 安装器会自动校验 SHA-256 完整性清单，安全备份 profile 配置，将插件写入本地 `offline-packages` 并完成登记。
 5. 重启 DeepSeek Harness 即可直接使用。
 
-#### 方式三：本地项目目录安装
+#### 方式四：本地项目目录安装
 
 1. 克隆本仓库并完成构建（产物位于 `lib/client.js`）。
 2. 在 Harness 插件页选择添加插件，输入项目根目录的绝对路径。

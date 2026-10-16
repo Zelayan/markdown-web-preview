@@ -1,9 +1,29 @@
 {
-  "name": "@local/markdown-web-preview",
+  "name": "@zelayan/markdown-web-preview",
   "version": "0.4.3",
-  "private": true,
   "type": "module",
   "description": "Markdown web preview for DeepSeek Harness document tabs",
+  "license": "MIT",
+  "author": "Zelayan",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zelayan/markdown-web-preview.git"
+  },
+  "homepage": "https://github.com/Zelayan/markdown-web-preview#readme",
+  "bugs": {
+    "url": "https://github.com/Zelayan/markdown-web-preview/issues"
+  },
+  "keywords": [
+    "markdown",
+    "preview",
+    "deepseek-harness",
+    "cordis",
+    "dsh-plugin",
+    "vscode"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "cordis.patch.yml",
     "index.js",

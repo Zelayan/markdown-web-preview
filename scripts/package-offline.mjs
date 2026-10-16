@@ -156,11 +156,13 @@ async function main() {
   // 7. Generate offline tarball (.tgz) for native DSH "添加插件"
   console.log('\n[5/5] 生成离线压缩包 (.tgz 与 .vsix)...');
   const tgzBuffer = createTarball(packageDir, 'package');
-  const tgzFileName = `local-markdown-web-preview-${version}.tgz`;
+  const tgzFileName = `zelayan-markdown-web-preview-${version}.tgz`;
   const tgzPath = join(distDir, tgzFileName);
   writeFileSync(tgzPath, tgzBuffer);
-  // Also keep a copy at repo root for backwards compatibility
-  writeFileSync(join(ROOT, tgzFileName), tgzBuffer);
+  // Also provide local- prefix copy for backward compatibility
+  const legacyTgzName = `local-markdown-web-preview-${version}.tgz`;
+  writeFileSync(join(distDir, legacyTgzName), tgzBuffer);
+  writeFileSync(join(ROOT, legacyTgzName), tgzBuffer);
   console.log(`✔ DSH 离线安装包: ${tgzFileName} (${(tgzBuffer.length / 1024).toFixed(1)} KB)`);
 
   // 8. Zip the offline bundle folder for distribution

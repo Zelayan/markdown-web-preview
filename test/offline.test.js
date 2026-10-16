@@ -37,14 +37,14 @@ test('hashFile and hashDirectory compute correct SHA-256 digests', async () => {
 test('parsePluginManifest validates format and rejects invalid manifests', () => {
   const valid = {
     format: 1,
-    name: '@local/markdown-web-preview',
+    name: '@zelayan/markdown-web-preview',
     version: '0.4.2',
     files: {
       'index.js': '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824',
     },
   };
   const parsed = parsePluginManifest(valid, 'manifest.json');
-  assert.equal(parsed.name, '@local/markdown-web-preview');
+  assert.equal(parsed.name, '@zelayan/markdown-web-preview');
   assert.equal(parsed.version, '0.4.2');
 
   // Invalid format version
